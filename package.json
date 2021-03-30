@@ -18,8 +18,10 @@
 		"express-graphql": "^0.12.0",
 		"graphql": "^15.5.0",
 		"graphql-tools": "^7.0.4",
+		"node": "^15.10.0",
 		"pg": "^8.5.1",
-		"prisma-client-lib": "^1.34.12"
+		"prisma-client-lib": "^1.34.12",
+		"urql": "^2.0.1"
 	},
 	"devDependencies": {
 		"got": "^11.3.0",

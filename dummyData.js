@@ -79,15 +79,42 @@ const dummyCustomers = [
 		},
 	},
 ];
+const dummyServices = [
+	{
+		price: 100,
+  		type: "Vehicle Inspection",
+	},
+	{
+		price: 110,
+  		type: "Oil change",
+	},
+	{
+		price: 120,
+  		type: "Brake repair",
+	},
+	{
+		price: 130,
+  		type: "Battery replacement",
+	},
+];
 
 async function main() {
 	// Create a new customer
-	for (let customer of dummyCustomers) {
-		const newCustomer = await prisma.customer.create({ data: customer });
+	// for (let customer of dummyCustomers) {
+	// 	const newCustomer = await prisma.customer.create({ data: customer });
+	// 	console.log(
+	// 		`Created new customer: ${newCustomer.firstName} (ID: ${newCustomer.id})`
+	// 	);
+	// }
+
+	// Create new services
+	for (let item of dummyServices) {
+		const newEntry = await prisma.service.create({ data: item });
 		console.log(
-			`Created new customer: ${newCustomer.firstName} (ID: ${newCustomer.id})`
+			`Created new service: ${newEntry.type} (ID: ${newEntry.id})`
 		);
 	}
+	
 }
 
 main().catch((e) => console.error(e));

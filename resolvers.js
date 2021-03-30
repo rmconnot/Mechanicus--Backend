@@ -14,6 +14,16 @@ exports.resolvers = {
 				},
 			});
 		},
+		vehicles: (root, args, context, info) => {
+			return context.prisma.vehicle.findMany({
+				where: {
+					customerID: args.customerID,
+				}
+			});
+		},
+		services: (root, args, context, info) => {
+			return context.prisma.service.findMany();
+		},
 	},
 	Mutation: {
 		createCustomer: (root, args, context) => {

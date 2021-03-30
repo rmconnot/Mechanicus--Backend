@@ -2,6 +2,8 @@ exports.typeDefs = `
 type Query {
     customers: [Customer!]!
     customer(id:Int!): Customer!
+    vehicles(customerID:Int!): [Vehicle!]!
+    services: [Service!]!
 }
 
 type Customer {
@@ -54,6 +56,25 @@ input CustomerInput {
     vehicles: [VehicleInput]
 }
 
+type Service {
+    id: Int
+    price: Float
+    type: String
+    quotes: [QuoteService]
+}
+
+type Quote {
+    id: Int
+    services: [QuoteService]
+    vehicleID: Int
+    customerID: Int
+}
+
+type QuoteService {
+    id: Int
+    serviceID: Int
+    quoteID: Int
+}
 
 type Mutation {
     createCustomer(
