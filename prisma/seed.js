@@ -1,8 +1,7 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 
-const prisma = new PrismaClient();
-
-const dummyCustomers = [
+const seedCustomers = [
 	{
 		firstName: "John",
 		lastName: "Smith",
@@ -79,7 +78,8 @@ const dummyCustomers = [
 		},
 	},
 ];
-const dummyServices = [
+
+const seedServices = [
 	{
 		price: 100,
   		type: "Vehicle Inspection",
@@ -98,7 +98,20 @@ const dummyServices = [
 	},
 ];
 
-const dummyQuoteService = [
+const seedMechanics = [
+	{
+		firstName: 'Michael',
+		lastName:'Williams',
+		phone: "123-456-7890",
+	},
+	{
+		firstName: 'Bill',
+		lastName:'Davis',
+		phone: "123-456-7890",
+	}
+];
+
+const seedQuoteServices = [
 	{ quoteID: 1, serviceID: 1 },
 	{ quoteID: 1, serviceID: 2 },
 	{ quoteID: 1, serviceID: 3 },
@@ -106,23 +119,70 @@ const dummyQuoteService = [
 	{ quoteID: 2, serviceID: 3 },
 ];
 
+const seedQuotes = [
+	{
+		scheduleDate: "03/04/2021",
+		status: "confirm",
+		mechanicID: 1,
+		vehicleID: 1,
+		customerID: 1,
+	},
+	{
+		scheduleDate: "05/04/2021",
+		status: "confirm",
+		mechanicID: 2,
+		vehicleID: 2,
+		customerID: 2,
+	},
+];
+
 async function main() {
-	// Create a new customer
-	for (let customer of dummyCustomers) {
-		const newCustomer = await prisma.customer.create({ data: customer });
+	// Create seed customers
+	for (let item of seedCustomers) {
+		const newRecord = await prisma.customer.create({ data: item });
 		console.log(
-			`Created new customer: ${newCustomer.firstName} (ID: ${newCustomer.id})`
+			`Created new customer: ${newRecord.firstName} (ID: ${newRecord.id})`
 		);
 	}
 
-	// Create new services
-	for (let item of dummyServices) {
+	// Create seed services
+	for (let item of seedServices) {
 		const newEntry = await prisma.service.create({ data: item });
 		console.log(
 			`Created new service: ${newEntry.type} (ID: ${newEntry.id})`
 		);
 	}
-	
+
+	//Create seed Mechanics
+	for (let item of seedMechanics) {
+		const newEntry = await prisma.mechanic.create({ data: item });
+		console.log(
+			`Created new mechanic: ${newEntry.firstName} (ID: ${newEntry.id})`
+		);
+	}
+
+	//Create seed Quotes
+	for (let item of seedQuotes) {
+		const newEntry = await prisma.quote.create({ data: item });
+		console.log(
+			`Created new quote: ${newEntry.scheduleDate} (ID: ${newEntry.id})`
+		);
+	}
+
+	//Create seed QuoteServices
+	for (let item of seedQuoteServices) {
+		const newEntry = await prisma.quoteService.create({ data: item });
+		console.log(
+			`Created new QuoteService: (ID: ${newEntry.id})`
+		);
+	}
 }
 
-main().catch((e) => console.error(e));
+main()
+  .catch(e => {
+    console.error(e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

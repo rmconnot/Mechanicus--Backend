@@ -24,6 +24,20 @@ exports.resolvers = {
 		services: (root, args, context, info) => {
 			return context.prisma.service.findMany();
 		},
+		quote: (root, args, context, info) => {
+			return context.prisma.quote.findMany({
+				where: {
+					id: args.customerID,
+				},
+				include: {
+					mechanic: true,
+					vehicle: true,
+					services: {
+						select: { service: true }
+					}
+				},
+			});
+		},
 	},
 	Mutation: {
 		createCustomer: (root, args, context) => {

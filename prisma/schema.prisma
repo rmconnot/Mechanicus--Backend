@@ -48,9 +48,22 @@ model Service {
   quotes QuoteService[]
 }
 
+model Mechanic {
+  id Int @id @default(autoincrement())
+  firstName String?
+  lastName String?
+  phone String
+  quotes Quote[]
+}
+
 model Quote {
   id Int @id @default(autoincrement())
+  scheduleDate String //need to combine with Shuyang's calendar picker
+  status String //status includes [quote, confirm, repair, complete]
   services QuoteService[]
+  mechanic Mechanic @relation(fields: [mechanicID], references: [id])
+  mechanicID Int
+
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   vehicleID Int
   customer Customer @relation(fields: [customerID], references: [id])
