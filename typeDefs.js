@@ -1,6 +1,7 @@
 exports.typeDefs = `
 type Query {
     customers: [Customer!]!
+    services: [Service!]!
     vehicle(customerID:Int!): [Vehicle!]!
     quote(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
@@ -47,25 +48,8 @@ type Customer {
     quotes: [Quote]
     appointments: [Appointment]
 }
-input VehicleInput {
-    customerID: Int  
-    vin: String
-    vehicleType: String
-    year: Int
-    make: String
-    model: String
-    imgUrl: String
-}
-type Vehicle {
-    id: Int
-    customerID: Int  
-    vin: String
-    vehicleType: String
-    year: Int
-    make: String
-    model: String
-    imgUrl: String
-}
+
+
 input CustomerInput {
     firstName: String
     lastName: String
@@ -78,8 +62,88 @@ input CustomerInput {
     state: String
     zipcode: Int
     vehicles: [VehicleInput]
+    quotes: [Quote]
 }
 
+
+input VehicleInput {
+    customerID: Int  
+    vin: String
+    vehicleType: String
+    year: Int
+    make: String
+    model: String
+    imgUrl: String
+}
+
+type Vehicle {
+    id: Int
+    customerID: Int  
+    vin: String
+    vehicleType: String
+    year: Int
+    make: String
+    model: String
+    imgUrl: String
+}
+
+type Service {
+    id: Int
+    price: Float
+    type: String
+    quotes: [QuoteService]
+}
+
+input ServiceInput {
+    price: Float
+    type: String
+    quotes: [QuoteServiceInput]
+}
+
+type Quote {
+    id: Int
+    scheduleDate: String
+    status: String
+    services: [QuoteService]
+    mechanic: Mechanic!
+    mechanicID: Int!
+    vehicle: Vehicle!
+    vehicleID: Int!
+    customerID: Int
+}
+
+input QuoteInput {
+    scheduleDate: String
+    status: String
+    services: [QuoteServiceInput]
+    mechanicID: Int
+    vehicleID: Int
+    customerID: Int
+}
+
+type QuoteService {
+    id: Int
+    service: Service!
+    serviceID: Int!
+    quote: Quote!
+    quoteID: Int!
+}
+
+input QuoteServiceInput {
+    serviceID: Int
+    quoteID: Int
+}
+
+type Mechanic {
+    id:Int
+}
+
+input MechanicInput {
+    firstName: String
+    lastName: String
+    phone: String
+    quotes: [QuoteInput]
+}
 
 type Service {
     id: Int

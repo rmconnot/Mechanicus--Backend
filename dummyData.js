@@ -92,6 +92,32 @@ const dummyCustomers = [
 		},
 	},
 ];
+const dummyServices = [
+	{
+		price: 100,
+  		type: "Vehicle Inspection",
+	},
+	{
+		price: 110,
+  		type: "Oil change",
+	},
+	{
+		price: 120,
+  		type: "Brake repair",
+	},
+	{
+		price: 130,
+  		type: "Battery replacement",
+	},
+];
+
+const dummyQuoteService = [
+	{ quoteID: 1, serviceID: 1 },
+	{ quoteID: 1, serviceID: 2 },
+	{ quoteID: 1, serviceID: 3 },
+	{ quoteID: 2, serviceID: 2 },
+	{ quoteID: 2, serviceID: 3 },
+];
 
 const dummyServices = [
 	{
@@ -178,6 +204,15 @@ async function main() {
 		const newQuoteService = await prisma.quoteService.create({ data: quoteService });
 
 	}
+
+	// Create new services
+	for (let item of dummyServices) {
+		const newEntry = await prisma.service.create({ data: item });
+		console.log(
+			`Created new service: ${newEntry.type} (ID: ${newEntry.id})`
+		);
+	}
+	
 }
 
 
