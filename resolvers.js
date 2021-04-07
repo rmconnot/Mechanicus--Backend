@@ -57,6 +57,29 @@ exports.resolvers = {
 				},
 			});
 		},
+
+		vehicle: (root, args, context, info) => {
+			return context.prisma.vehicle.findMany({
+				where: {
+					id: args.customerID,
+				},
+			});
+		},
+
+		quote: (root, args, context, info) => {
+			return context.prisma.quote.findMany({
+				where: {
+					id: args.customerID,
+				},
+				include: {
+					mechanician: true,
+					vehicle: true,
+					services: {
+						select: { service: true }
+					}
+				},
+			});
+		},
 	},
 	Mutation: {
 		createCustomer: async (root, args, context) => {
@@ -87,9 +110,27 @@ exports.resolvers = {
 
 			return context.prisma.customer.create({
 				data: {
+					firstName: args.firstName,
+					lastName: args.lastName,
 					phone: args.phone,
 					email: args.email,
 					password: args.password,
+					streetAddress1: args.streetAddress1,
+					streetAddress2: args.streetAddress2,
+					city: args.city,
+					state: args.state,
+					zipcode: args.zipcode,
+
+					vehicles: [
+						{
+							vin: args.vehicles[0].vin,
+							vehicleType: args.vehicles[0].vehicleType,
+							year: args.vehicles[0].year,
+							make: args.vehicles[0].make,
+							model: args.vehicles[0].model,
+							imgUrl: args.vehicles[0].imgUrl,
+						},
+					],
 				},
 			});
 		},

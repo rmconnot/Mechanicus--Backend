@@ -1,6 +1,8 @@
 exports.typeDefs = `
 type Query {
     customers: [Customer!]!
+    vehicle(customerID:Int!): [Vehicle!]!
+    quote(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
     appointments(customerID:Int!): [Appointment!]!
 }
@@ -45,7 +47,6 @@ type Customer {
     quotes: [Quote]
     appointments: [Appointment]
 }
-
 input VehicleInput {
     customerID: Int  
     vin: String
@@ -55,7 +56,6 @@ input VehicleInput {
     model: String
     imgUrl: String
 }
-
 type Vehicle {
     id: Int
     customerID: Int  
@@ -66,7 +66,6 @@ type Vehicle {
     model: String
     imgUrl: String
 }
-
 input CustomerInput {
     firstName: String
     lastName: String
@@ -79,6 +78,70 @@ input CustomerInput {
     state: String
     zipcode: Int
     vehicles: [VehicleInput]
+}
+
+
+type Service {
+    id: Int
+    price: Float
+    type: String
+    quotes: [QuoteService]
+}
+
+input ServiceInput {
+    customerID: Int
+    price: Float
+    type: String
+    quotes: [QuoteServiceInput]
+}
+
+type Quote {
+    customerID: Int
+    scheduleDate: String
+    status: String
+    mechanicianID: Int
+    mechanician: Mechanician
+    vehicleID: Int
+    vehicle: Vehicle
+    services: [QuoteService]
+}
+
+input QuoteInput {
+    scheduleDate: String
+    status: String
+    services: [QuoteServiceInput]
+    mechanicianID: Int
+    vehicleID: Int
+    customerID: Int
+}
+
+type QuoteService {
+    id: Int
+    serviceID: Int
+    quoteID: Int
+    service: Service
+}
+
+input QuoteServiceInput {
+    customerID: Int
+    serviceID: Int
+    quoteID: Int
+}
+
+type Mechanician {
+    id:Int
+    firstName: String
+    lastName: String
+    phone: String
+    quotes: [Quote]
+}
+
+input MechanicianInput {
+    customerID: Int
+    firstName: String
+    lastName: String
+    phone: String
+    quotes: [QuoteInput]
 }
 
 type Appointment {

@@ -7,7 +7,7 @@ const dummyCustomers = [
 		firstName: "John",
 		lastName: "Smith",
 		phone: "123-456-7890",
-		email: "exampleq@email.com",
+		email: "example1@email.com",
 		password: "password1",
 		streetAddress1: "123 Sesame Street",
 		streetAddress2: "Apt. 1",
@@ -24,11 +24,6 @@ const dummyCustomers = [
 					model: "Focus SE",
 					imgUrl:
 						"https://file.kelleybluebookimages.com/kbb/base/evox/CP/10858/2017-Ford-Focus-front_10858_032_2400x1800_YZ.png",
-
-					appointments: {
-						create: [{ customerID: 1 }],
-					},
-
 				},
 			],
 		},
@@ -37,7 +32,7 @@ const dummyCustomers = [
 		firstName: "Jane",
 		lastName: "Doe",
 		phone: "123-456-7890",
-		email: "examplew@email.com",
+		email: "example2@email.com",
 		password: "password2",
 		streetAddress1: "123 Sesame Street",
 		streetAddress2: "Apt. 2",
@@ -54,10 +49,6 @@ const dummyCustomers = [
 					model: "Trailblazer",
 					imgUrl:
 						"https://www.gannett-cdn.com/presto/2020/07/10/PDTF/76f14475-53f5-4abe-ae0f-a4f4911c8be3-IMG_2481.JPG",
-
-					appointments: {
-						create: [{ customerID: 2 }],
-					},
 				},
 			],
 		},
@@ -66,7 +57,7 @@ const dummyCustomers = [
 		firstName: "Ben",
 		lastName: "James",
 		phone: "123-456-7890",
-		email: "examplee@email.com",
+		email: "example3@email.com",
 		password: "password3",
 		streetAddress1: "123 Sesame Street",
 		streetAddress2: "Apt. 3",
@@ -83,10 +74,6 @@ const dummyCustomers = [
 					model: "Tundra",
 					imgUrl:
 						"https://www.toyota.com/imgix/responsive/images/mlp/colorizer/2021/tundra/8W2/1.png",
-
-					appointments: {
-						create: [{ customerID: 3 }],
-					},
 				},
 			],
 		},
@@ -151,7 +138,6 @@ const dummyQuotes = [
 	},
 ]
 
-
 async function main() {
 	// Create a new customer
 	for (let customer of dummyCustomers) {
@@ -159,7 +145,6 @@ async function main() {
 		console.log(
 			`Created new customer: ${newCustomer.firstName} (ID: ${newCustomer.id})`
 		);
-
 	}
 
 	for (let service of dummyServices) {
@@ -176,7 +161,6 @@ async function main() {
 	}
 	for (let quoteService of dummyQuoteService) {
 		const newQuoteService = await prisma.quoteService.create({ data: quoteService });
-
 	}
 }
 
