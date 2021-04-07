@@ -59,9 +59,9 @@ exports.resolvers = {
 		},
 
 		vehicle: (root, args, context, info) => {
-			return context.prisma.vehicle.findMany({
+			return context.prisma.vehicle.findUnique({
 				where: {
-					id: args.customerID,
+					id: args.id,
 				},
 			});
 		},
@@ -75,8 +75,8 @@ exports.resolvers = {
 					mechanician: true,
 					vehicle: true,
 					services: {
-						select: { service: true }
-					}
+						select: { service: true },
+					},
 				},
 			});
 		},
@@ -84,7 +84,7 @@ exports.resolvers = {
 			return context.prisma.vehicle.findMany({
 				where: {
 					customerID: args.customerID,
-				}
+				},
 			});
 		},
 		services: (root, args, context, info) => {
@@ -99,8 +99,8 @@ exports.resolvers = {
 					mechanic: true,
 					vehicle: true,
 					services: {
-						select: { service: true }
-					}
+						select: { service: true },
+					},
 				},
 			});
 		},

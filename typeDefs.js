@@ -2,7 +2,8 @@ exports.typeDefs = `
 type Query {
     customers: [Customer!]!
     services: [Service!]!
-    vehicle(customerID:Int!): [Vehicle!]!
+    vehicle(id:Int!): Vehicle!
+    vehicles(customerID:Int!): [Vehicle!]!
     quote(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
     appointments(customerID:Int!): [Appointment!]!
@@ -17,12 +18,16 @@ type Quote {
     id: Int 
     transaction: Transaction
     customerID: Int
+    mechanic: Mechanic
     mechanicID: Int
     vehicleID: Int
-    dateTime: String
+    quoteDate: String
+    status: String
     costEstimate: Float
     description: String
+    services: [QuoteService]
 }
+
 
 type Transaction {
         id: Int 
@@ -61,8 +66,6 @@ input CustomerInput {
     city: String
     state: String
     zipcode: Int
-    vehicles: [VehicleInput]
-    quotes: [Quote]
 }
 
 
@@ -95,21 +98,21 @@ type Service {
 }
 
 input ServiceInput {
+    customerID: Int
     price: Float
     type: String
     quotes: [QuoteServiceInput]
 }
 
-type Quote {
-    id: Int
-    scheduleDate: String
-    status: String
-    services: [QuoteService]
-    mechanic: Mechanic!
-    mechanicID: Int!
-    vehicle: Vehicle!
-    vehicleID: Int!
-    customerID: Int
+type Mechanic {
+    id:Int
+}
+
+input MechanicInput {
+    firstName: String
+    lastName: String
+    phone: String
+    quotes: [QuoteInput]
 }
 
 input QuoteInput {
@@ -130,82 +133,9 @@ type QuoteService {
 }
 
 input QuoteServiceInput {
-    serviceID: Int
-    quoteID: Int
-}
-
-type Mechanic {
-    id:Int
-}
-
-input MechanicInput {
-    firstName: String
-    lastName: String
-    phone: String
-    quotes: [QuoteInput]
-}
-
-type Service {
-    id: Int
-    price: Float
-    type: String
-    quotes: [QuoteService]
-}
-
-input ServiceInput {
-    customerID: Int
-    price: Float
-    type: String
-    quotes: [QuoteServiceInput]
-}
-
-type Quote {
-    customerID: Int
-    scheduleDate: String
-    status: String
-    mechanicianID: Int
-    mechanician: Mechanician
-    vehicleID: Int
-    vehicle: Vehicle
-    services: [QuoteService]
-}
-
-input QuoteInput {
-    scheduleDate: String
-    status: String
-    services: [QuoteServiceInput]
-    mechanicianID: Int
-    vehicleID: Int
-    customerID: Int
-}
-
-type QuoteService {
-    id: Int
-    serviceID: Int
-    quoteID: Int
-    service: Service
-}
-
-input QuoteServiceInput {
     customerID: Int
     serviceID: Int
     quoteID: Int
-}
-
-type Mechanician {
-    id:Int
-    firstName: String
-    lastName: String
-    phone: String
-    quotes: [Quote]
-}
-
-input MechanicianInput {
-    customerID: Int
-    firstName: String
-    lastName: String
-    phone: String
-    quotes: [QuoteInput]
 }
 
 type Appointment {

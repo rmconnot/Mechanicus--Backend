@@ -59,11 +59,13 @@ model Vehicle {
   appointments Appointment[]
 }
 
-model Service {
+//join table
+model QuoteService {
   id Int @id @default(autoincrement())
-  price Float
-  type String
-  quotes QuoteService[]
+  service Service @relation(fields: [serviceID], references: [id])
+  serviceID Int
+  quote Quote @relation(fields: [quoteID], references: [id])
+  quoteID Int
 }
 
 
@@ -81,15 +83,6 @@ model Quote {
   dateTime DateTime
   costEstimate Float
   description String
-}
-
-//join table
-model QuoteService {
-  id Int @id @default(autoincrement())
-  service Service @relation(fields: [serviceID], references: [id])
-  serviceID Int
-  quote Quote @relation(fields: [quoteID], references: [id])
-  quoteID Int
 }
 
 model Transaction {
@@ -112,9 +105,15 @@ model Appointment {
   dateTime String 
 }
 
+
 model Service {
   id Int @id @default(autoincrement())
   price Float
   type String
   quotes QuoteService[]
 }
+
+
+
+
+
