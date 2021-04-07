@@ -1,7 +1,35 @@
 exports.typeDefs = `
 type Query {
     customers: [Customer!]!
-    customer(id:Int!): Customer!
+    services: [Service!]!
+    vehicle(customerID:Int!): [Vehicle!]!
+    quote(customerID:Int!): [Quote!]! 
+    customer(id:Int, email:String, password:String): Customer
+    appointments(customerID:Int!): [Appointment!]!
+}
+
+type Subscription {
+    newCustomer: Customer
+    newAppointment(customerID:Int!): Appointment
+}
+
+type Quote {
+    id: Int 
+    transaction: Transaction
+    customerID: Int
+    mechanicID: Int
+    vehicleID: Int
+    dateTime: String
+    costEstimate: Float
+    description: String
+}
+
+type Transaction {
+        id: Int 
+        quoteID: Int
+        service: String
+        cost: Float
+        dateTime: String
 }
 
 type Customer {
@@ -17,7 +45,26 @@ type Customer {
     state: String
     zipcode: Int
     vehicles: [Vehicle]
+    quotes: [Quote]
+    appointments: [Appointment]
 }
+
+
+input CustomerInput {
+    firstName: String
+    lastName: String
+    phone: String
+    email: String
+    password: String
+    streetAddress1: String
+    streetAddress2: String
+    city: String
+    state: String
+    zipcode: Int
+    vehicles: [VehicleInput]
+    quotes: [Quote]
+}
+
 
 input VehicleInput {
     customerID: Int  
@@ -40,20 +87,133 @@ type Vehicle {
     imgUrl: String
 }
 
-input CustomerInput {
+type Service {
+    id: Int
+    price: Float
+    type: String
+    quotes: [QuoteService]
+}
+
+input ServiceInput {
+    price: Float
+    type: String
+    quotes: [QuoteServiceInput]
+}
+
+type Quote {
+    id: Int
+    scheduleDate: String
+    status: String
+    services: [QuoteService]
+    mechanic: Mechanic!
+    mechanicID: Int!
+    vehicle: Vehicle!
+    vehicleID: Int!
+    customerID: Int
+}
+
+input QuoteInput {
+    scheduleDate: String
+    status: String
+    services: [QuoteServiceInput]
+    mechanicID: Int
+    vehicleID: Int
+    customerID: Int
+}
+
+type QuoteService {
+    id: Int
+    service: Service!
+    serviceID: Int!
+    quote: Quote!
+    quoteID: Int!
+}
+
+input QuoteServiceInput {
+    serviceID: Int
+    quoteID: Int
+}
+
+type Mechanic {
+    id:Int
+}
+
+input MechanicInput {
     firstName: String
     lastName: String
     phone: String
-    email: String
-    password: String
-    streetAddress1: String
-    streetAddress2: String
-    city: String
-    state: String
-    zipcode: Int
-    vehicles: [VehicleInput]
+    quotes: [QuoteInput]
 }
 
+type Service {
+    id: Int
+    price: Float
+    type: String
+    quotes: [QuoteService]
+}
+
+input ServiceInput {
+    customerID: Int
+    price: Float
+    type: String
+    quotes: [QuoteServiceInput]
+}
+
+type Quote {
+    customerID: Int
+    scheduleDate: String
+    status: String
+    mechanicianID: Int
+    mechanician: Mechanician
+    vehicleID: Int
+    vehicle: Vehicle
+    services: [QuoteService]
+}
+
+input QuoteInput {
+    scheduleDate: String
+    status: String
+    services: [QuoteServiceInput]
+    mechanicianID: Int
+    vehicleID: Int
+    customerID: Int
+}
+
+type QuoteService {
+    id: Int
+    serviceID: Int
+    quoteID: Int
+    service: Service
+}
+
+input QuoteServiceInput {
+    customerID: Int
+    serviceID: Int
+    quoteID: Int
+}
+
+type Mechanician {
+    id:Int
+    firstName: String
+    lastName: String
+    phone: String
+    quotes: [Quote]
+}
+
+input MechanicianInput {
+    customerID: Int
+    firstName: String
+    lastName: String
+    phone: String
+    quotes: [QuoteInput]
+}
+
+type Appointment {
+    id: Int
+    customerID: Int
+    dateTime: String
+    vehicle: Vehicle
+}
 
 type Mutation {
     createCustomer(
@@ -67,7 +227,6 @@ type Mutation {
         city: String
         state: String
         zipcode: Int
-        vehicles: [VehicleInput]
     ): Customer,
     updateCustomer(
         id: Int!,
@@ -82,5 +241,10 @@ type Mutation {
         state: String
         zipcode: Int
         vehicles: [VehicleInput]
-    ): Customer
+    ): Customer,
+    createAppointment(
+        customerID: Int!
+        vehicleID: Int!
+        dateTime: String
+    ): Appointment
 }`;
