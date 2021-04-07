@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const seedCustomers = [
+
 	{
 		firstName: "John",
 		lastName: "Smith",
@@ -80,6 +81,7 @@ const seedCustomers = [
 ];
 
 const seedServices = [
+
 	{
 		price: 100,
   		type: "Vehicle Inspection",
@@ -99,6 +101,7 @@ const seedServices = [
 ];
 
 const seedMechanics = [
+
 	{
 		firstName: 'Michael',
 		lastName:'Williams',
@@ -112,6 +115,7 @@ const seedMechanics = [
 ];
 
 const seedQuoteServices = [
+
 	{ quoteID: 1, serviceID: 1 },
 	{ quoteID: 1, serviceID: 2 },
 	{ quoteID: 1, serviceID: 3 },
@@ -186,3 +190,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect()
   })
+
