@@ -69,16 +69,18 @@ model Service {
 
 model Quote {
   id Int @id @default(autoincrement())
-  scheduleDate String
-  status String //status includes [quote, confirm, repair, complete]
-  services QuoteService[]
-  mechanician Mechanician@relation(fields: [mechanicianID], references: [id])
-  mechanicianID Int
-
-  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
-  vehicleID Int
+  transaction Transaction?
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
+  mechanic Mechanic @relation(fields: [mechanicID], references: [id])
+  mechanicID Int
+  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
+  vehicleID Int
+    status String //status includes [quote, confirm, repair, complete]
+  services QuoteService[]
+  dateTime DateTime
+  costEstimate Float
+  description String
 }
 
 //join table
@@ -88,29 +90,6 @@ model QuoteService {
   serviceID Int
   quote Quote @relation(fields: [quoteID], references: [id])
   quoteID Int
-}
-
-
-model Mechanician {
-  id Int @id @default(autoincrement())
-  firstName String?
-  lastName String?
-  phone String
-  quotes Quote[]
-}
-
-model Quote {
-  id Int @id @default(autoincrement())
-  transaction Transaction?
-  customer Customer @relation(fields: [customerID], references: [id])
-  customerID Int
-  mechanic Mechanic @relation(fields: [mechanicID], references: [id])
-  mechanicID Int
-  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
-  vehicleID Int
-  dateTime DateTime
-  costEstimate Float
-  description String
 }
 
 model Transaction {
@@ -138,35 +117,4 @@ model Service {
   price Float
   type String
   quotes QuoteService[]
-}
-
-model Mechanic {
-  id Int @id @default(autoincrement())
-  firstName String?
-  lastName String?
-  phone String
-  quotes Quote[]
-}
-
-model Quote {
-  id Int @id @default(autoincrement())
-  scheduleDate String //need to combine with Shuyang's calendar picker
-  status String //status includes [quote, confirm, repair, complete]
-  services QuoteService[]
-  mechanic Mechanic @relation(fields: [mechanicID], references: [id])
-  mechanicID Int
-
-  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
-  vehicleID Int
-  customer Customer @relation(fields: [customerID], references: [id])
-  customerID Int
-}
-
-//join table
-model QuoteService {
-  id Int @id @default(autoincrement())
-  service Service @relation(fields: [serviceID], references: [id])
-  serviceID Int
-  quote Quote @relation(fields: [quoteID], references: [id])
-  quoteID Int
 }
