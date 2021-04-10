@@ -1,8 +1,7 @@
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 const seedCustomers = [
-
 	{
 		firstName: "John",
 		lastName: "Smith",
@@ -81,58 +80,56 @@ const seedCustomers = [
 ];
 
 const seedServices = [
-
 	{
 		price: 100,
-  		type: "Vehicle Inspection",
+		type: "Vehicle Inspection",
 	},
 	{
 		price: 110,
-  		type: "Oil change",
+		type: "Oil change",
 	},
 	{
 		price: 120,
-  		type: "Brake repair",
+		type: "Brake repair",
 	},
 	{
 		price: 130,
-  		type: "Battery replacement",
+		type: "Battery replacement",
 	},
 ];
 
 const seedMechanics = [
-
 	{
-		firstName: 'Michael',
-		lastName:'Williams',
+		firstName: "Michael",
+		lastName: "Williams",
 		phone: "123-456-7890",
 	},
 	{
-		firstName: 'Bill',
-		lastName:'Davis',
+		firstName: "Bill",
+		lastName: "Davis",
 		phone: "123-456-7890",
-	}
+	},
 ];
 
-const seedQuoteServices = [
+// const seedQuoteServices = [
 
-	{ quoteID: 1, serviceID: 1 },
-	{ quoteID: 1, serviceID: 2 },
-	{ quoteID: 1, serviceID: 3 },
-	{ quoteID: 2, serviceID: 2 },
-	{ quoteID: 2, serviceID: 3 },
-];
+// 	{ quoteID: 1, serviceID: 1 },
+// 	{ quoteID: 1, serviceID: 2 },
+// 	{ quoteID: 1, serviceID: 3 },
+// 	{ quoteID: 2, serviceID: 2 },
+// 	{ quoteID: 2, serviceID: 3 },
+// ];
 
 const seedQuotes = [
 	{
-		scheduleDate: "03/04/2021",
+		createdAt: new Date(),
 		status: "confirm",
 		mechanicID: 1,
 		vehicleID: 1,
 		customerID: 1,
 	},
 	{
-		scheduleDate: "05/04/2021",
+		createdAt: new Date(),
 		status: "confirm",
 		mechanicID: 2,
 		vehicleID: 2,
@@ -152,9 +149,7 @@ async function main() {
 	// Create seed services
 	for (let item of seedServices) {
 		const newEntry = await prisma.service.create({ data: item });
-		console.log(
-			`Created new service: ${newEntry.type} (ID: ${newEntry.id})`
-		);
+		console.log(`Created new service: ${newEntry.type} (ID: ${newEntry.id})`);
 	}
 
 	//Create seed Mechanics
@@ -169,25 +164,24 @@ async function main() {
 	for (let item of seedQuotes) {
 		const newEntry = await prisma.quote.create({ data: item });
 		console.log(
-			`Created new quote: ${newEntry.scheduleDate} (ID: ${newEntry.id})`
+			`Created new quote: ${newEntry.createdAt} (ID: ${newEntry.id})`
 		);
 	}
 
 	//Create seed QuoteServices
-	for (let item of seedQuoteServices) {
-		const newEntry = await prisma.quoteService.create({ data: item });
-		console.log(
-			`Created new QuoteService: (ID: ${newEntry.id})`
-		);
-	}
+	// for (let item of seedQuoteServices) {
+	// 	const newEntry = await prisma.quoteService.create({ data: item });
+	// 	console.log(
+	// 		`Created new QuoteService: (ID: ${newEntry.id})`
+	// 	);
+	// }
 }
 
 main()
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
-
+	.catch((e) => {
+		console.error(e);
+		process.exit(1);
+	})
+	.finally(async () => {
+		await prisma.$disconnect();
+	});

@@ -12,6 +12,7 @@ type Query {
 type Subscription {
     newCustomer: Customer
     newAppointment(customerID:Int!): Appointment
+    newQuote(customerID:Int!): Appointment
 }
 
 type Quote {
@@ -175,6 +176,5 @@ type Mutation {
     createAppointment(
         customerID: Int!
         vehicleID: Int!
-        dateTime: String
     ): Appointment
 }`;
