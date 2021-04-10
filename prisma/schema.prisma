@@ -31,11 +31,11 @@ model Customer {
 
 model Mechanic {
   id Int @id @default(autoincrement())
-  firstName String?
-  lastName String?
+  firstName String
+  lastName String
   phone String
-  email String @unique
-  password String
+  email String? @unique
+  password String?
   streetAddress1 String?
   streetAddress2 String?
   city String?
@@ -56,17 +56,16 @@ model Vehicle {
   model String
   imgUrl String?
   quotes Quote[]
-  appointments Appointment[]
 }
 
-//join table
-model QuoteService {
-  id Int @id @default(autoincrement())
-  service Service @relation(fields: [serviceID], references: [id])
-  serviceID Int
-  quote Quote @relation(fields: [quoteID], references: [id])
-  quoteID Int
-}
+// //join table
+// model QuoteService {
+//   id Int @id @default(autoincrement())
+//   service Service @relation(fields: [serviceID], references: [id])
+//   serviceID Int
+//   quote Quote @relation(fields: [quoteID], references: [id])
+//   quoteID Int
+// }
 
 
 model Quote {
@@ -74,22 +73,23 @@ model Quote {
   transaction Transaction?
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
-  mechanic Mechanic @relation(fields: [mechanicID], references: [id])
-  mechanicID Int
+  // probably don't need the mechanic fields on the quote model since they are present in the appointment model
+  mechanic Mechanic? @relation(fields: [mechanicID], references: [id])
+  mechanicID Int?
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   vehicleID Int
-    status String //status includes [quote, confirm, repair, complete]
-  services QuoteService[]
-  dateTime DateTime
-  costEstimate Float
-  description String
+  status String? //status includes [quote, confirm, repair, complete]
+  services Service[]
+  createdAt DateTime @default(now())
+  costEstimate Float?
+  description String?
+  appointment Appointment?
 }
 
 model Transaction {
   id Int @id @default(autoincrement())
   quote Quote @relation(fields: [quoteID], references: [id])
   quoteID Int
-  service String
   cost Float
   dateTime DateTime
 }
@@ -98,19 +98,23 @@ model Appointment {
   id Int @id @default(autoincrement())
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
+  scheduleDate String //DateTime
+  quote Quote? @relation(fields: [quoteID], references: [id])
+  quoteID Int?
   // mechanic Mechanic @relation(fields: [mechanicID], references: [id])
   // mechanicID Int?
-  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
-  vehicleID Int
-  dateTime String 
+  // vehicle Vehicle @relation(fields: [vehicleID], references: [id])
+  // vehicleID Int
 }
-
 
 model Service {
   id Int @id @default(autoincrement())
   price Float
   type String
-  quotes QuoteService[]
+  quote Quote? @relation(fields: [quoteID], references: [id])
+  quoteID Int?
+  // quotes QuoteService[]
+
 }
 
 
