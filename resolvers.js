@@ -85,7 +85,7 @@ exports.resolvers = {
 			return context.prisma.service.findMany();
 		},
 
-		quote: (root, args, context, info) => {
+		quotes: (root, args, context, info) => {
 			return context.prisma.quote.findMany({
 				where: {
 					customerID: args.customerID,

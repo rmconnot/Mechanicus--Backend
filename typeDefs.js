@@ -4,7 +4,7 @@ type Query {
     services: [Service!]!
     vehicle(id:Int!): Vehicle!
     vehicles(customerID:Int!): [Vehicle!]!
-    quote(customerID:Int!): [Quote!]! 
+    quotes(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
     appointments(customerID:Int!): [Appointment!]!
 }
