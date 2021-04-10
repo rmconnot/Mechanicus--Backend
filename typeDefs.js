@@ -102,7 +102,7 @@ input ServiceInput {
     customerID: Int
     price: Float
     type: String
-    quotes: [QuoteServiceInput]
+    quotes: [QuoteInput]
 }
 
 type Mechanic {
