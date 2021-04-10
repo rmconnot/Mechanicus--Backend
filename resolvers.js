@@ -52,6 +52,7 @@ exports.resolvers = {
 				where: {
 					customerID: args.customerID,
 				},
+
 				include: {
 					quote: {
 						include: {
