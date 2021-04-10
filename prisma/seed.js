@@ -137,6 +137,19 @@ const seedQuotes = [
 	},
 ];
 
+const seedAppointments = [
+	{
+		customerID: 1,
+		quoteID: 1,
+		scheduleDate: '04/05/2021'
+	},
+	{
+		customerID: 2,
+		quoteID: 2,
+		scheduleDate: '04/06/2021'
+	},
+]
+
 async function main() {
 	// Create seed customers
 	for (let item of seedCustomers) {
@@ -167,6 +180,15 @@ async function main() {
 			`Created new quote: ${newEntry.createdAt} (ID: ${newEntry.id})`
 		);
 	}
+
+	//Create seed Appointments
+	for (let item of seedAppointments) {
+		const newEntry = await prisma.appointment.create({ data: item });
+		console.log(
+			`Created new appointment: ${newEntry.scheduleDate} (ID: ${newEntry.id})`
+		);
+	}
+
 
 	//Create seed QuoteServices
 	// for (let item of seedQuoteServices) {
