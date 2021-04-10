@@ -60,6 +60,8 @@ exports.resolvers = {
 					},
 				},
 			});
+
+			return appointment;
 		},
 
 		vehicle: (root, args, context, info) => {
@@ -185,27 +187,28 @@ exports.resolvers = {
 			const newAppointment = await context.prisma.appointment.create({
 				data: {
 					customerID: args.customerID,
-					vehicleID: args.vehicleID,
+					quoteID: args.quoteID,
+					// vehicleID: args.vehicleID,
 					// mechanicID: args.mechanicID,
-					scheduleData: args.scheduleDate,
+					scheduleDate: args.scheduleDate,
 				},
 			});
 
 			// console.log("New Appointment: ", newAppointment);
 
-			try {
-				const appointmentVehicle = await context.prisma.vehicle.findUnique({
-					where: {
-						id: args.vehicleID,
-					},
-				});
-				newAppointment.vehicle = appointmentVehicle;
-				pubsub.publish(newAppointmentsSub, {
-					newAppointment: newAppointment,
-				});
-			} catch (e) {
-				console.error(e);
-			}
+			// try {
+			// 	const appointmentVehicle = await context.prisma.vehicle.findUnique({
+			// 		where: {
+			// 			id: args.vehicleID,
+			// 		},
+			// 	});
+			// 	newAppointment.vehicle = appointmentVehicle;
+			// 	pubsub.publish(newAppointmentsSub, {
+			// 		newAppointment: newAppointment,
+			// 	});
+			// } catch (e) {
+			// 	console.error(e);
+			// }
 
 			return newAppointment;
 		},

@@ -141,9 +141,11 @@ input QuoteServiceInput {
 
 type Appointment {
     id: Int
+    customer: Customer
     customerID: Int
-    dateTime: String
-    vehicle: Vehicle
+    scheduleDate: String
+    quote: Quote
+    quoteID: Int
 }
 
 type Mutation {
@@ -175,6 +177,7 @@ type Mutation {
     ): Customer,
     createAppointment(
         customerID: Int!
-        vehicleID: Int!
+        quoteID: Int!
+        scheduleDate: String!
     ): Appointment
 }`;
