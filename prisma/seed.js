@@ -151,6 +151,7 @@ const seedAppointments = [
 	},
 ]
 
+
 const seedTransactions = [
 	{}
 ];
@@ -195,6 +196,17 @@ async function main() {
 		const newEntry = await prisma.appointment.create({ data: item });
 		console.log(`Created new appointment(ID: ${newEntry.id}): customer ${newEntry.customerID} with quote ${newEntry.quoteID}`);
 	}
+
+
+
+	//Create seed QuoteServices
+	// for (let item of seedQuoteServices) {
+	// 	const newEntry = await prisma.quoteService.create({ data: item });
+	// 	console.log(
+	// 		`Created new QuoteService: (ID: ${newEntry.id})`
+	// 	);
+	// }
+
 }
 
 main()

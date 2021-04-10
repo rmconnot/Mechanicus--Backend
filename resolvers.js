@@ -52,6 +52,7 @@ exports.resolvers = {
 				where: {
 					customerID: args.customerID,
 				},
+				
 				include: {
 					quote: {
 						include: {
@@ -60,6 +61,7 @@ exports.resolvers = {
 					},
 				},
 			});
+			return appointment;
 		},
 
 		vehicle: (root, args, context, info) => {
@@ -110,7 +112,7 @@ exports.resolvers = {
 					},
 				},
 			});
-		},
+		}
 	},
 	Mutation: {
 		createCustomer: async (root, args, context) => {
@@ -185,9 +187,10 @@ exports.resolvers = {
 			const newAppointment = await context.prisma.appointment.create({
 				data: {
 					customerID: args.customerID,
-					vehicleID: args.vehicleID,
+					// vehicleID: args.vehicleID,
+					quoteID: args.quoteID,
 					// mechanicID: args.mechanicID,
-					scheduleData: args.scheduleDate,
+					scheduleDate: args.scheduleDate,
 				},
 			});
 

@@ -22,6 +22,7 @@ type Quote {
     mechanic: Mechanic
     mechanicID: Int
     vehicleID: Int
+    vehicle: Vehicle
     quoteDate: String
     status: String
     costEstimate: Float
@@ -128,6 +129,7 @@ input QuoteInput {
 type Appointment {
     id: Int
     customerID: Int
+    scheduleDate: String
     dateTime: String
     quote: Quote
     quoteID: Int
