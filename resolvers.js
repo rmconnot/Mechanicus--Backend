@@ -103,14 +103,6 @@ exports.resolvers = {
 					},
 				},
 			});
-		},
-
-		customerByEmail: (root, args, context, info) => {
-			return context.prisma.customer.findUnique({
-				where: {
-					email: args.email,
-				},
-			});
 		}
 	},
 	Mutation: {

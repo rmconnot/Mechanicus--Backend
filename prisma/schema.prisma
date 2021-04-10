@@ -34,13 +34,13 @@ model Mechanic {
   firstName String?
   lastName String?
   phone String
-  email String @unique
-  password String
-  streetAddress1 String?
-  streetAddress2 String?
-  city String?
-  state String?
-  zipcode Int?
+  // email String @unique
+  // password String?
+  // streetAddress1 String?
+  // streetAddress2 String?
+  // city String?
+  // state String?
+  // zipcode Int?
   quotes Quote[]
   // appointments Appointment[]
 }
@@ -78,11 +78,11 @@ model Quote {
   mechanicID Int
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   vehicleID Int
-    status String //status includes [quote, confirm, repair, complete]
+  status String //status includes [quote, confirm, repair, complete]
   services QuoteService[]
-  dateTime DateTime
-  costEstimate Float
-  description String
+  scheduleDate String
+  costEstimate Float?
+  description String?
 }
 
 model Transaction {
