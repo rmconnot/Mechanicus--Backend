@@ -41,7 +41,7 @@ model Mechanic {
   city String?
   state String?
   zipcode Int?
-  appointments Appointment[]
+  // appointments Appointment[]
 }
 
 model Vehicle {
