@@ -57,6 +57,7 @@ exports.resolvers = {
 					quote: {
 						include: {
 							vehicle: true,
+							services: true,
 						},
 					},
 				},
@@ -72,22 +73,6 @@ exports.resolvers = {
 				},
 			});
 		},
-
-		quote: (root, args, context, info) => {
-			return context.prisma.quote.findMany({
-				where: {
-					id: args.customerID,
-				},
-				include: {
-					mechanician: true,
-					vehicle: true,
-					services: {
-						select: { service: true },
-					},
-				},
-			});
-		},
-
 		vehicles: (root, args, context, info) => {
 			return context.prisma.vehicle.findMany({
 				where: {
@@ -103,14 +88,11 @@ exports.resolvers = {
 		quote: (root, args, context, info) => {
 			return context.prisma.quote.findMany({
 				where: {
-					id: args.customerID,
+					customerID: args.customerID,
 				},
 				include: {
-					mechanic: true,
 					vehicle: true,
-					services: {
-						select: { service: true },
-					},
+					services: true,
 				},
 			});
 		},
