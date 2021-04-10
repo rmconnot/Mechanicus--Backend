@@ -27,16 +27,16 @@ type Quote {
     status: String
     costEstimate: Float
     description: String
-    services: [QuoteService]
+    services: [Service]
 }
 
 
 type Transaction {
-        id: Int 
-        quoteID: Int
-        service: String
-        cost: Float
-        dateTime: String
+    id: Int 
+    quoteID: Int
+    service: String
+    cost: Float
+    dateTime: String
 }
 
 type Customer {
@@ -96,14 +96,14 @@ type Service {
     id: Int
     price: Float
     type: String
-    quotes: [QuoteService]
+    quotes: [Quote]
 }
 
 input ServiceInput {
     customerID: Int
     price: Float
     type: String
-    quotes: [QuoteServiceInput]
+    quotes: [QuoteInput]
 }
 
 type Mechanic {
@@ -120,33 +120,21 @@ input MechanicInput {
 input QuoteInput {
     scheduleDate: String
     status: String
-    services: [QuoteServiceInput]
+    services: [ServiceInput]
     mechanicID: Int
     vehicleID: Int
     customerID: Int
 }
 
-type QuoteService {
-    id: Int
-    service: Service!
-    serviceID: Int!
-    quote: Quote!
-    quoteID: Int!
-}
-
-input QuoteServiceInput {
-    customerID: Int
-    serviceID: Int
-    quoteID: Int
-}
-
 type Appointment {
     id: Int
     customerID: Int
-    quoteID: Int
     scheduleDate: String
     dateTime: String
     quote: Quote
+    quoteID: Int
+    mechanic: Mechanic
+    mechanicID: Int
 }
 
 type Mutation {
