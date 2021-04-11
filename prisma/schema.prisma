@@ -41,7 +41,6 @@ model Mechanic {
   city String?
   state String?
   zipcode Int?
-  quotes Quote[]
   // appointments Appointment[]
 }
 
@@ -58,24 +57,11 @@ model Vehicle {
   quotes Quote[]
 }
 
-// //join table
-// model QuoteService {
-//   id Int @id @default(autoincrement())
-//   service Service @relation(fields: [serviceID], references: [id])
-//   serviceID Int
-//   quote Quote @relation(fields: [quoteID], references: [id])
-//   quoteID Int
-// }
-
-
 model Quote {
   id Int @id @default(autoincrement())
   transaction Transaction?
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
-  // probably don't need the mechanic fields on the quote model since they are present in the appointment model
-  mechanic Mechanic? @relation(fields: [mechanicID], references: [id])
-  mechanicID Int?
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   vehicleID Int
   status String? //status includes [quote, confirm, repair, complete]
@@ -105,16 +91,14 @@ model Appointment {
   // mechanicID Int?
   // vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   // vehicleID Int
+
 }
 
 model Service {
   id Int @id @default(autoincrement())
   price Float
   type String
-  quote Quote? @relation(fields: [quoteID], references: [id])
-  quoteID Int?
-  // quotes QuoteService[]
-
+  quotes Quote[]
 }
 
 

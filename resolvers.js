@@ -52,15 +52,17 @@ exports.resolvers = {
 				where: {
 					customerID: args.customerID,
 				},
-				
+
 				include: {
 					quote: {
 						include: {
 							vehicle: true,
+							services: true,
 						},
 					},
 				},
 			});
+
 			return appointment;
 		},
 
@@ -71,7 +73,6 @@ exports.resolvers = {
 				},
 			});
 		},
-
 		vehicles: (root, args, context, info) => {
 			return context.prisma.vehicle.findMany({
 				where: {
@@ -84,19 +85,18 @@ exports.resolvers = {
 			return context.prisma.service.findMany();
 		},
 
-		quote: (root, args, context, info) => {
+		quotes: (root, args, context, info) => {
 			return context.prisma.quote.findMany({
 				where: {
 					customerID: args.customerID,
 				},
 				
 				include: {
-					mechanic: true,
 					vehicle: true,
 					services: true,
 				},
 			});
-		}
+		},
 	},
 	Mutation: {
 		createCustomer: async (root, args, context) => {
@@ -171,8 +171,8 @@ exports.resolvers = {
 			const newAppointment = await context.prisma.appointment.create({
 				data: {
 					customerID: args.customerID,
-					// vehicleID: args.vehicleID,
 					quoteID: args.quoteID,
+					// vehicleID: args.vehicleID,
 					// mechanicID: args.mechanicID,
 					scheduleDate: args.scheduleDate,
 				},
@@ -180,19 +180,19 @@ exports.resolvers = {
 
 			// console.log("New Appointment: ", newAppointment);
 
-			try {
-				const appointmentVehicle = await context.prisma.vehicle.findUnique({
-					where: {
-						id: args.vehicleID,
-					},
-				});
-				newAppointment.vehicle = appointmentVehicle;
-				pubsub.publish(newAppointmentsSub, {
-					newAppointment: newAppointment,
-				});
-			} catch (e) {
-				console.error(e);
-			}
+			// try {
+			// 	const appointmentVehicle = await context.prisma.vehicle.findUnique({
+			// 		where: {
+			// 			id: args.vehicleID,
+			// 		},
+			// 	});
+			// 	newAppointment.vehicle = appointmentVehicle;
+			// 	pubsub.publish(newAppointmentsSub, {
+			// 		newAppointment: newAppointment,
+			// 	});
+			// } catch (e) {
+			// 	console.error(e);
+			// }
 
 			return newAppointment;
 		},

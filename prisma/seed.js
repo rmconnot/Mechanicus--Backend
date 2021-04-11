@@ -83,18 +83,30 @@ const seedServices = [
 	{
 		price: 100,
 		type: "Vehicle Inspection",
+		quotes: {
+			connect: [{id:1},{id:2}],
+		}
 	},
 	{
 		price: 110,
 		type: "Oil change",
+		quotes: {
+			connect: [{id:1},],
+		}
 	},
 	{
 		price: 120,
 		type: "Brake repair",
+		quotes: {
+			connect: [{id:1},],
+		}
 	},
 	{
 		price: 130,
 		type: "Battery replacement",
+		quotes: {
+			connect: [{id:2},],
+		}
 	},
 ];
 
@@ -111,27 +123,16 @@ const seedMechanics = [
 	},
 ];
 
-// const seedQuoteServices = [
-
-// 	{ quoteID: 1, serviceID: 1 },
-// 	{ quoteID: 1, serviceID: 2 },
-// 	{ quoteID: 1, serviceID: 3 },
-// 	{ quoteID: 2, serviceID: 2 },
-// 	{ quoteID: 2, serviceID: 3 },
-// ];
-
 const seedQuotes = [
 	{
 		createdAt: new Date(),
 		status: "confirm",
-		mechanicID: 1,
 		vehicleID: 1,
 		customerID: 1,
 	},
 	{
 		createdAt: new Date(),
 		status: "confirm",
-		mechanicID: 2,
 		vehicleID: 2,
 		customerID: 2,
 	},
@@ -150,12 +151,29 @@ const seedAppointments = [
 	},
 ]
 
+
+const seedTransactions = [
+	{}
+];
+
 async function main() {
 	// Create seed customers
 	for (let item of seedCustomers) {
 		const newRecord = await prisma.customer.create({ data: item });
 		console.log(
 			`Created new customer: ${newRecord.firstName} (ID: ${newRecord.id})`
+		);
+	}
+	//Create seed Quotes
+	for (let item of seedQuotes) {
+		const newEntry = await prisma.quote.create({ 
+			data: item,
+			include: {
+				services: true,
+			}
+		 });
+		console.log(
+			`Created new quote: ${newEntry.createdAt} (ID: ${newEntry.id})`
 		);
 	}
 
@@ -173,21 +191,12 @@ async function main() {
 		);
 	}
 
-	//Create seed Quotes
-	for (let item of seedQuotes) {
-		const newEntry = await prisma.quote.create({ data: item });
-		console.log(
-			`Created new quote: ${newEntry.createdAt} (ID: ${newEntry.id})`
-		);
-	}
-
-	//Create seed Appointments
+	// Create seed appointments
 	for (let item of seedAppointments) {
 		const newEntry = await prisma.appointment.create({ data: item });
-		console.log(
-			`Created new appointment: ${newEntry.scheduleDate} (ID: ${newEntry.id})`
-		);
+		console.log(`Created new appointment(ID: ${newEntry.id}): customer ${newEntry.customerID} with quote ${newEntry.quoteID}`);
 	}
+
 
 
 	//Create seed QuoteServices
@@ -197,6 +206,7 @@ async function main() {
 	// 		`Created new QuoteService: (ID: ${newEntry.id})`
 	// 	);
 	// }
+
 }
 
 main()
