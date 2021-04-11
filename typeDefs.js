@@ -23,11 +23,11 @@ type Quote {
     mechanicID: Int
     vehicleID: Int
     vehicle: Vehicle
-    quoteDate: String
+    createdAt: String
     status: String
     costEstimate: Float
     description: String
-    services: [QuoteService]
+    services: [Service]
 }
 
 
