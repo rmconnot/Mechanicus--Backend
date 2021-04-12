@@ -1,7 +1,7 @@
 exports.typeDefs = `
 type Query {
     customers: [Customer!]!
-    services: [Service!]!
+    services(servicesList:[Int]): [Service!]!
     vehicle(id:Int!): Vehicle!
     vehicles(customerID:Int!): [Vehicle!]!
     quotes(customerID:Int!): [Quote!]! 

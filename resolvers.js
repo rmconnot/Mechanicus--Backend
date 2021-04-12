@@ -81,7 +81,21 @@ exports.resolvers = {
 			});
 		},
 
-		services: (root, args, context, info) => {
+		services: async (root, args, context, info) => {
+			if (args.servicesList) {
+				let serviceRecordsList = [];
+
+				for (let service of args.servicesList) {
+					let serviceRecord = await context.prisma.service.findUnique({
+						where: {
+							id: service,
+						},
+					});
+					serviceRecordsList.push(serviceRecord);
+				}
+				return serviceRecordsList;
+			}
+
 			return context.prisma.service.findMany();
 		},
 
