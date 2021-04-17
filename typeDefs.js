@@ -7,14 +7,13 @@ type Query {
     quotes(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
     appointments(customerID:Int!): [Appointment!]!
+    customerProfile(id:Int): Customer
 }
-
 type Subscription {
     newCustomer: Customer
     newAppointment(customerID:Int!): Appointment
     newQuote(customerID:Int!): Appointment
 }
-
 type Quote {
     id: Int 
     transaction: Transaction
@@ -38,7 +37,6 @@ type Transaction {
     cost: Float
     dateTime: String
 }
-
 type Customer {
     id: Int
     firstName: String
@@ -91,14 +89,12 @@ type Vehicle {
     model: String
     imgUrl: String
 }
-
 type Service {
     id: Int
     price: Float
     type: String
     quotes: [Quote]
 }
-
 input ServiceInput {
     customerID: Int
     price: Float
@@ -136,7 +132,6 @@ type Appointment {
     mechanic: Mechanic
     mechanicID: Int
 }
-
 type Mutation {
     createCustomer(
         firstName: String

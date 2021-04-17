@@ -84,29 +84,29 @@ const seedServices = [
 		price: 100,
 		type: "Vehicle Inspection",
 		quotes: {
-			connect: [{id:1},{id:2}],
-		}
+			connect: [{ id: 1 }, { id: 2 }],
+		},
 	},
 	{
 		price: 110,
 		type: "Oil change",
 		quotes: {
-			connect: [{id:1},],
-		}
+			connect: [{ id: 1 }],
+		},
 	},
 	{
 		price: 120,
 		type: "Brake repair",
 		quotes: {
-			connect: [{id:1},],
-		}
+			connect: [{ id: 1 }],
+		},
 	},
 	{
 		price: 130,
 		type: "Battery replacement",
 		quotes: {
-			connect: [{id:2},],
-		}
+			connect: [{ id: 2 }],
+		},
 	},
 ];
 
@@ -142,19 +142,16 @@ const seedAppointments = [
 	{
 		customerID: 1,
 		quoteID: 1,
-		scheduleDate: '04/05/2021'
+		scheduleDate: "04/05/2021",
 	},
 	{
 		customerID: 2,
 		quoteID: 2,
-		scheduleDate: '04/06/2021'
+		scheduleDate: "04/06/2021",
 	},
-]
-
-
-const seedTransactions = [
-	{}
 ];
+
+const seedTransactions = [{}];
 
 async function main() {
 	// Create seed customers
@@ -166,12 +163,12 @@ async function main() {
 	}
 	//Create seed Quotes
 	for (let item of seedQuotes) {
-		const newEntry = await prisma.quote.create({ 
+		const newEntry = await prisma.quote.create({
 			data: item,
 			include: {
 				services: true,
-			}
-		 });
+			},
+		});
 		console.log(
 			`Created new quote: ${newEntry.createdAt} (ID: ${newEntry.id})`
 		);
@@ -194,10 +191,12 @@ async function main() {
 	// Create seed appointments
 	for (let item of seedAppointments) {
 		const newEntry = await prisma.appointment.create({ data: item });
-		console.log(`Created new appointment(ID: ${newEntry.id}): customer ${newEntry.customerID} with quote ${newEntry.quoteID}`);
+		console.log(
+			`Created new appointment(ID: ${newEntry.id}): customer ${
+				newEntry.customerID
+			} with quote ${newEntry.quoteID}`
+		);
 	}
-
-
 
 	//Create seed QuoteServices
 	// for (let item of seedQuoteServices) {
@@ -206,7 +205,6 @@ async function main() {
 	// 		`Created new QuoteService: (ID: ${newEntry.id})`
 	// 	);
 	// }
-
 }
 
 main()

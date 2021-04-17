@@ -91,7 +91,6 @@ model Appointment {
   // mechanicID Int?
   // vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   // vehicleID Int
-
 }
 
 model Service {

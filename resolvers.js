@@ -73,6 +73,15 @@ exports.resolvers = {
 				},
 			});
 		},
+
+		customerProfile: (root, args, context, info) => {
+			return context.prisma.customer.findUnique({
+				where: {
+					id: args.id,
+				},
+			});
+		},
+
 		vehicles: (root, args, context, info) => {
 			return context.prisma.vehicle.findMany({
 				where: {
