@@ -12,7 +12,7 @@ type Query {
 type Subscription {
     newCustomer: Customer
     newAppointment(customerID:Int!): Appointment
-    newQuote(customerID:Int!): Appointment
+    newQuote(customerID:Int!): Quote
 }
 
 type Quote {
@@ -28,6 +28,7 @@ type Quote {
     costEstimate: Float
     description: String
     services: [Service]
+    createdAt: String
 }
 
 
@@ -126,6 +127,10 @@ input QuoteInput {
     customerID: Int
 }
 
+input QuoteServiceInput {
+    id: Int!
+}
+
 type Appointment {
     id: Int
     customer: Customer
@@ -135,6 +140,7 @@ type Appointment {
     quoteID: Int
     mechanic: Mechanic
     mechanicID: Int
+    address: String
 }
 
 type Mutation {
@@ -165,8 +171,16 @@ type Mutation {
         vehicles: [VehicleInput]
     ): Customer,
     createAppointment(
+        address: String!
         customerID: Int!
         quoteID: Int!
         scheduleDate: String!
-    ): Appointment
+    ): Appointment,
+    createQuote(
+        costEstimate: Float!
+        customerID: Int!
+		status: String!
+        vehicleID: Int!
+        services: [Int]!
+        ): Quote
 }`;

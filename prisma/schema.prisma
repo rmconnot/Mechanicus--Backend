@@ -72,6 +72,14 @@ model Quote {
   appointment Appointment?
 }
 
+// model QuoteServices {
+//   id Int @id @default(autoincrement())
+//   quote Quote? @relation(fields: [quoteID], references: [id])
+//   quoteID Int?
+//   service Service? @relation(fields: [serviceID], references: [id])
+//   serviceID Int?
+// }
+
 model Transaction {
   id Int @id @default(autoincrement())
   quote Quote @relation(fields: [quoteID], references: [id])
@@ -87,6 +95,7 @@ model Appointment {
   scheduleDate String //DateTime
   quote Quote @relation(fields: [quoteID], references: [id])
   quoteID Int
+  address String
   // mechanic Mechanic @relation(fields: [mechanicID], references: [id])
   // mechanicID Int?
   // vehicle Vehicle @relation(fields: [vehicleID], references: [id])
