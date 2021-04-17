@@ -126,13 +126,13 @@ const seedMechanics = [
 const seedQuotes = [
 	{
 		createdAt: new Date(),
-		status: "confirm",
+		status: "active",
 		vehicleID: 1,
 		customerID: 1,
 	},
 	{
 		createdAt: new Date(),
-		status: "confirm",
+		status: "active",
 		vehicleID: 2,
 		customerID: 2,
 	},
@@ -142,12 +142,14 @@ const seedAppointments = [
 	{
 		customerID: 1,
 		quoteID: 1,
-		scheduleDate: '04/05/2021'
+		scheduleDate: '04/05/2021',
+		status: 'approved',
 	},
 	{
 		customerID: 2,
 		quoteID: 2,
-		scheduleDate: '04/06/2021'
+		scheduleDate: '04/06/2021',
+		status: 'completed',
 	},
 ]
 
