@@ -96,14 +96,9 @@ model Appointment {
   scheduleDate String //DateTime
   quote Quote @relation(fields: [quoteID], references: [id])
   quoteID Int
-<<<<<<< HEAD
   mechanic Mechanic? @relation(fields: [mechanicID], references: [id])
   mechanicID Int?
-=======
   address String
-  // mechanic Mechanic @relation(fields: [mechanicID], references: [id])
-  // mechanicID Int?
->>>>>>> fea7eff1fcd7d9b63b786a6bcdd67559cc015d27
   // vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   // vehicleID Int
 }

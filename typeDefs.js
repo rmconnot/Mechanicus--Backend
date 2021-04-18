@@ -26,7 +26,6 @@ type Quote {
     costEstimate: Float
     description: String
     services: [Service]
-    createdAt: String
 }
 
 

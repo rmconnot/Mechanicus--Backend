@@ -130,6 +130,7 @@ const seedQuotes = [
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
 		services: { connect: [{ id: 1 }, { id: 2 }] },
+		costEstimate: 210.0
 	},
 	{
 		createdAt: new Date(),
@@ -137,12 +138,15 @@ const seedQuotes = [
 		vehicle: { connect: { id: 2 } },
 		customer: { connect: { id: 2 } },
 		services: { connect: [{ id: 1 }, { id: 2 }] },
+		costEstimate: 210.0
 	},
 	{
 		createdAt: new Date(),
 		status: "confirmed",
-		vehicleID: 1,
-		customerID: 1,
+		vehicle: { connect: { id: 1 } },
+		customer: { connect: { id: 1 } },
+		services: { connect: [{ id: 1 }] },
+		costEstimate: 100.0
 	},
 ];
 
