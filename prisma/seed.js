@@ -218,13 +218,6 @@ async function main() {
 		);
 	}
 
-	//Create seed QuoteServices
-	// for (let item of seedQuoteServices) {
-	// 	const newEntry = await prisma.quoteService.create({ data: item });
-	// 	console.log(
-	// 		`Created new QuoteService: (ID: ${newEntry.id})`
-	// 	);
-	// }
 }
 
 main()
