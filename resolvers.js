@@ -1,7 +1,7 @@
-const newCustomerSub = "NEW_CUSTOMER";
 const newAppointmentsSub = "NEW_APPOINTMENTS";
-const { PubSub } = require("apollo-server");
+const newQuotesSub = "NEW_QUOTES";
 
+const { PubSub } = require("apollo-server");
 const pubsub = new PubSub();
 
 const { withFilter } = require("apollo-server");
@@ -74,6 +74,15 @@ exports.resolvers = {
 				},
 			});
 		},
+
+		customerProfile: (root, args, context, info) => {
+			return context.prisma.customer.findUnique({
+				where: {
+					id: args.id,
+				},
+			});
+		},
+
 		vehicles: (root, args, context, info) => {
 			return context.prisma.vehicle.findMany({
 				where: {
@@ -82,7 +91,21 @@ exports.resolvers = {
 			});
 		},
 
-		services: (root, args, context, info) => {
+		services: async (root, args, context, info) => {
+			if (args.servicesList) {
+				let serviceRecordsList = [];
+
+				for (let service of args.servicesList) {
+					let serviceRecord = await context.prisma.service.findUnique({
+						where: {
+							id: service,
+						},
+					});
+					serviceRecordsList.push(serviceRecord);
+				}
+				return serviceRecordsList;
+			}
+
 			return context.prisma.service.findMany();
 		},
 
@@ -186,25 +209,29 @@ exports.resolvers = {
 		},
 
 		createAppointment: async (root, args, context) => {
+			console.log("received createAppointment request");
 			const newAppointment = await context.prisma.appointment.create({
 				data: {
 					customerID: args.customerID,
 					quoteID: args.quoteID,
-					// vehicleID: args.vehicleID,
-					// mechanicID: args.mechanicID,
 					scheduleDate: args.scheduleDate,
+					address: args.address,
 				},
 			});
 
-			console.log("New Appointment: ", newAppointment);
+			// console.log("New Appointment: ", newAppointment);
 
 			try {
-				const appointmentVehicle = await context.prisma.vehicle.findUnique({
+				const appointmentQuote = await context.prisma.quote.findUnique({
 					where: {
-						id: args.vehicleID,
+						id: args.quoteID,
+					},
+					include: {
+						vehicle: true,
+						services: true,
 					},
 				});
-				newAppointment.vehicle = appointmentVehicle;
+				newAppointment.quote = appointmentQuote;
 				pubsub.publish(newAppointmentsSub, {
 					newAppointment: newAppointment,
 				});
@@ -214,19 +241,57 @@ exports.resolvers = {
 
 			return newAppointment;
 		},
+
+		createQuote: async (root, args, context) => {
+			console.log("received createQuote request");
+
+			const newQuote = await context.prisma.quote.create({
+				data: {
+					costEstimate: args.costEstimate,
+					customer: { connect: { id: args.customerID } },
+					status: args.status,
+					vehicle: { connect: { id: args.vehicleID } },
+					services: { connect: args.services.map((s) => ({ id: s })) },
+				},
+			});
+
+			// console.log("newQuote: ", newQuote);
+
+			try {
+				const retrievedQuote = await context.prisma.quote.findUnique({
+					where: {
+						id: newQuote.id,
+					},
+					include: {
+						vehicle: true,
+						services: true,
+					},
+				});
+				pubsub.publish(newQuotesSub, {
+					newQuote: retrievedQuote,
+				});
+			} catch (e) {
+				console.error(e);
+			}
+
+			return newQuote;
+		},
 	},
 	Subscription: {
-		// newCustomer: {
-		// 	subscribe: (root, args, context) => {
-		// 		console.log("subscribing");
-		// 		return pubsub.asyncIterator(newCustomerSub);
-		// 	},
-		// },
 		newAppointment: {
 			subscribe: withFilter(
 				() => pubsub.asyncIterator(newAppointmentsSub),
 				(payload, variables) => {
 					return payload.newAppointment.customerID === variables.customerID;
+				}
+			),
+		},
+
+		newQuote: {
+			subscribe: withFilter(
+				() => pubsub.asyncIterator(newQuotesSub),
+				(payload, variables) => {
+					return payload.newQuote.customerID === variables.customerID;
 				}
 			),
 		},

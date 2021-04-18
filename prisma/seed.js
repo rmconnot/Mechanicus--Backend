@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, Prisma } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const seedCustomers = [
@@ -81,32 +81,32 @@ const seedCustomers = [
 
 const seedServices = [
 	{
-		price: 100,
+		price: 100.0,
 		type: "Vehicle Inspection",
-		quotes: {
-			connect: [{id:1},{id:2},{id:3}],
-		}
+		// quotes: {
+		// 	connect: [{ id: 1 }, { id: 2 }],
+		// },
 	},
 	{
-		price: 110,
+		price: 110.0,
 		type: "Oil change",
-		quotes: {
-			connect: [{id:1},],
-		}
+		// quotes: {
+		// 	connect: [{ id: 1 }],
+		// },
 	},
 	{
-		price: 120,
+		price: 120.0,
 		type: "Brake repair",
-		quotes: {
-			connect: [{id:1},],
-		}
+		// quotes: {
+		// 	connect: [{ id: 1 }],
+		// },
 	},
 	{
-		price: 130,
+		price: 130.0,
 		type: "Battery replacement",
-		quotes: {
-			connect: [{id:2},],
-		}
+		// quotes: {
+		// 	connect: [{ id: 2 }],
+		// },
 	},
 ];
 
@@ -126,15 +126,17 @@ const seedMechanics = [
 const seedQuotes = [
 	{
 		createdAt: new Date(),
-		status: "confirmed",
-		vehicleID: 1,
-		customerID: 1,
+		status: "confirm",
+		vehicle: { connect: { id: 1 } },
+		customer: { connect: { id: 1 } },
+		services: { connect: [{ id: 1 }, { id: 2 }] },
 	},
 	{
 		createdAt: new Date(),
-		status: "confirmed",
-		vehicleID: 2,
-		customerID: 2,
+		status: "confirm",
+		vehicle: { connect: { id: 2 } },
+		customer: { connect: { id: 2 } },
+		services: { connect: [{ id: 1 }, { id: 2 }] },
 	},
 	{
 		createdAt: new Date(),
@@ -150,28 +152,28 @@ const seedAppointments = [
 		quoteID: 1,
 		mechanicID: 1,
 		status: "approved",
-		scheduleDate: '04/05/2021'
+		scheduleDate: '04/05/2021',
+		address: "123 Sesame Street",
 	},
 	{
 		customerID: 2,
 		quoteID: 2,
 		mechanicID: 2,
 		status: "approved",
-		scheduleDate: '04/06/2021'
+		scheduleDate: '04/06/2021',
+		address: "123 Sesame Street",
 	},
 	{
 		customerID: 1,
 		quoteID: 3,
 		mechanicID: 1,
 		status: "completed",
-		scheduleDate: '04/02/2021'
+		scheduleDate: '04/02/2021',
+		address: "123 Sesame Street",
 	},
 ]
 
-
-const seedTransactions = [
-	{}
-];
+const seedTransactions = [{}];
 
 async function main() {
 	// Create seed customers
@@ -179,18 +181,6 @@ async function main() {
 		const newRecord = await prisma.customer.create({ data: item });
 		console.log(
 			`Created new customer: ${newRecord.firstName} (ID: ${newRecord.id})`
-		);
-	}
-	//Create seed Quotes
-	for (let item of seedQuotes) {
-		const newEntry = await prisma.quote.create({ 
-			data: item,
-			include: {
-				services: true,
-			}
-		 });
-		console.log(
-			`Created new quote: ${newEntry.createdAt} (ID: ${newEntry.id})`
 		);
 	}
 
@@ -208,13 +198,25 @@ async function main() {
 		);
 	}
 
+	//Create seed Quotes
+	for (let item of seedQuotes) {
+		const newEntry = await prisma.quote.create({
+			data: item,
+		});
+		console.log(
+			`Created new quote: ${newEntry.createdAt} (ID: ${newEntry.id})`
+		);
+	}
+
 	// Create seed appointments
 	for (let item of seedAppointments) {
 		const newEntry = await prisma.appointment.create({ data: item });
-		console.log(`Created new appointment(ID: ${newEntry.id}): customer ${newEntry.customerID} with quote ${newEntry.quoteID}`);
+		console.log(
+			`Created new appointment(ID: ${newEntry.id}): customer ${
+				newEntry.customerID
+			} with quote ${newEntry.quoteID}`
+		);
 	}
-
-
 
 	//Create seed QuoteServices
 	// for (let item of seedQuoteServices) {
@@ -223,7 +225,6 @@ async function main() {
 	// 		`Created new QuoteService: (ID: ${newEntry.id})`
 	// 	);
 	// }
-
 }
 
 main()

@@ -1,21 +1,20 @@
 exports.typeDefs = `
 type Query {
     customers: [Customer!]!
-    services: [Service!]!
+    services(servicesList:[Int]): [Service!]!
     vehicle(id:Int!): Vehicle!
     vehicles(customerID:Int!): [Vehicle!]!
     quotes(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
     appointments(customerID:Int!): [Appointment!]!
     appointment(appointmentID:Int!): Appointment!
+    customerProfile(id:Int): Customer
 }
-
 type Subscription {
     newCustomer: Customer
     newAppointment(customerID:Int!): Appointment
-    newQuote(customerID:Int!): Appointment
+    newQuote(customerID:Int!): Quote
 }
-
 type Quote {
     id: Int 
     transaction: Transaction
@@ -27,6 +26,7 @@ type Quote {
     costEstimate: Float
     description: String
     services: [Service]
+    createdAt: String
 }
 
 
@@ -37,7 +37,6 @@ type Transaction {
     cost: Float
     dateTime: String
 }
-
 type Customer {
     id: Int
     firstName: String
@@ -90,14 +89,12 @@ type Vehicle {
     model: String
     imgUrl: String
 }
-
 type Service {
     id: Int
     price: Float
     type: String
     quotes: [Quote]
 }
-
 input ServiceInput {
     customerID: Int
     price: Float
@@ -128,6 +125,10 @@ input QuoteInput {
     customerID: Int
 }
 
+input QuoteServiceInput {
+    id: Int!
+}
+
 type Appointment {
     id: Int
     customer: Customer
@@ -138,8 +139,8 @@ type Appointment {
     status: String
     mechanic: Mechanic
     mechanicID: Int
+    address: String
 }
-
 type Mutation {
     createCustomer(
         firstName: String
@@ -168,8 +169,16 @@ type Mutation {
         vehicles: [VehicleInput]
     ): Customer,
     createAppointment(
+        address: String!
         customerID: Int!
         quoteID: Int!
         scheduleDate: String!
-    ): Appointment
+    ): Appointment,
+    createQuote(
+        costEstimate: Float!
+        customerID: Int!
+		status: String!
+        vehicleID: Int!
+        services: [Int]!
+        ): Quote
 }`;
