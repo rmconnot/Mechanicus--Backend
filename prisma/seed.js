@@ -148,6 +148,12 @@ const seedQuotes = [
 		services: { connect: [{ id: 1 }] },
 		costEstimate: 100.0
 	},
+	{
+		createdAt: new Date(),
+		status: "confirmed",
+		vehicleID: 1,
+		customerID: 1,
+	},
 ];
 
 const seedAppointments = [
