@@ -84,7 +84,7 @@ const seedServices = [
 		price: 100,
 		type: "Vehicle Inspection",
 		quotes: {
-			connect: [{id:1},{id:2}],
+			connect: [{id:1},{id:2},{id:3}],
 		}
 	},
 	{
@@ -126,15 +126,21 @@ const seedMechanics = [
 const seedQuotes = [
 	{
 		createdAt: new Date(),
-		status: "confirm",
+		status: "confirmed",
 		vehicleID: 1,
 		customerID: 1,
 	},
 	{
 		createdAt: new Date(),
-		status: "confirm",
+		status: "confirmed",
 		vehicleID: 2,
 		customerID: 2,
+	},
+	{
+		createdAt: new Date(),
+		status: "confirmed",
+		vehicleID: 1,
+		customerID: 1,
 	},
 ];
 
@@ -142,12 +148,23 @@ const seedAppointments = [
 	{
 		customerID: 1,
 		quoteID: 1,
+		mechanicID: 1,
+		status: "approved",
 		scheduleDate: '04/05/2021'
 	},
 	{
 		customerID: 2,
 		quoteID: 2,
+		mechanicID: 2,
+		status: "approved",
 		scheduleDate: '04/06/2021'
+	},
+	{
+		customerID: 1,
+		quoteID: 3,
+		mechanicID: 1,
+		status: "completed",
+		scheduleDate: '04/02/2021'
 	},
 ]
 

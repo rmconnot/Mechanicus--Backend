@@ -41,7 +41,7 @@ model Mechanic {
   city String?
   state String?
   zipcode Int?
-  // appointments Appointment[]
+  appointments Appointment[]
 }
 
 model Vehicle {
@@ -64,7 +64,7 @@ model Quote {
   customerID Int
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   vehicleID Int
-  status String? //status includes [quote, confirm, repair, complete]
+  status String? //status includes [confirmed, expired]
   services Service[]
   createdAt DateTime @default(now())
   costEstimate Float?
@@ -84,11 +84,12 @@ model Appointment {
   id Int @id @default(autoincrement())
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
+  status String // status includes [pending, approved, canceled, completed]
   scheduleDate String //DateTime
   quote Quote @relation(fields: [quoteID], references: [id])
   quoteID Int
-  // mechanic Mechanic @relation(fields: [mechanicID], references: [id])
-  // mechanicID Int?
+  mechanic Mechanic? @relation(fields: [mechanicID], references: [id])
+  mechanicID Int?
   // vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   // vehicleID Int
 
