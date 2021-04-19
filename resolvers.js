@@ -60,6 +60,7 @@ exports.resolvers = {
 							services: true,
 						},
 					},
+					mechanic: true,
 				},
 			});
 
@@ -113,9 +114,27 @@ exports.resolvers = {
 				where: {
 					customerID: args.customerID,
 				},
+				
 				include: {
 					vehicle: true,
 					services: true,
+				},
+			});
+		},
+		appointment: (root, args, context, info) => {
+			return context.prisma.appointment.findUnique({
+				where: {
+					id: args.appointmentID,
+				},
+				
+				include: {
+					quote: {
+						include: {
+							vehicle: true,
+							services: true,
+						},
+					},
+					mechanic: true,
 				},
 			});
 		},

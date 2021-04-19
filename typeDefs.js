@@ -7,6 +7,7 @@ type Query {
     quotes(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
     appointments(customerID:Int!): [Appointment!]!
+    appointment(appointmentID:Int!): Appointment!
     customerProfile(id:Int): Customer
 }
 type Subscription {
@@ -18,16 +19,13 @@ type Quote {
     id: Int 
     transaction: Transaction
     customerID: Int
-    mechanic: Mechanic
-    mechanicID: Int
     vehicleID: Int
     vehicle: Vehicle
-    quoteDate: String
+    createdAt: String
     status: String
     costEstimate: Float
     description: String
     services: [Service]
-    createdAt: String
 }
 
 
@@ -105,6 +103,9 @@ input ServiceInput {
 
 type Mechanic {
     id:Int
+    firstName: String
+    lastName: String
+    phone: String
 }
 
 input MechanicInput {
@@ -134,6 +135,7 @@ type Appointment {
     scheduleDate: String
     quote: Quote
     quoteID: Int
+    status: String
     mechanic: Mechanic
     mechanicID: Int
     address: String
