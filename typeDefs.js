@@ -172,6 +172,7 @@ type Mutation {
         customerID: Int!
         quoteID: Int!
         scheduleDate: String!
+        status: String!
     ): Appointment,
     createQuote(
         costEstimate: Float!

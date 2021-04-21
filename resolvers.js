@@ -114,7 +114,7 @@ exports.resolvers = {
 				where: {
 					customerID: args.customerID,
 				},
-				
+
 				include: {
 					vehicle: true,
 					services: true,
@@ -126,7 +126,7 @@ exports.resolvers = {
 				where: {
 					id: args.appointmentID,
 				},
-				
+
 				include: {
 					quote: {
 						include: {
@@ -216,6 +216,7 @@ exports.resolvers = {
 					quoteID: args.quoteID,
 					scheduleDate: args.scheduleDate,
 					address: args.address,
+					status: args.status,
 				},
 			});
 
