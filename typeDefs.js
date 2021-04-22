@@ -14,6 +14,7 @@ type Subscription {
     newCustomer: Customer
     newAppointment(customerID:Int!): Appointment
     newQuote(customerID:Int!): Quote
+    newVehicle(customerID: Int!): Vehicle
 }
 type Quote {
     id: Int 
@@ -180,5 +181,13 @@ type Mutation {
 		status: String!
         vehicleID: Int!
         services: [Int]!
-        ): Quote
+        ): Quote,
+    createVehicle(
+        customerID: Int!
+        vin: String!
+        vehicleType: String!
+        year: Int!
+        make: String!
+        model: String!
+    ): Vehicle
 }`;

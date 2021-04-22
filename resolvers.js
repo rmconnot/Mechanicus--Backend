@@ -1,5 +1,6 @@
 const newAppointmentsSub = "NEW_APPOINTMENTS";
 const newQuotesSub = "NEW_QUOTES";
+const newVehiclesSub = "NEW_VEHICLES";
 
 const { PubSub } = require("apollo-server");
 const pubsub = new PubSub();
@@ -244,8 +245,6 @@ exports.resolvers = {
 		},
 
 		createQuote: async (root, args, context) => {
-			console.log("received createQuote request");
-
 			const newQuote = await context.prisma.quote.create({
 				data: {
 					costEstimate: args.costEstimate,
@@ -277,6 +276,31 @@ exports.resolvers = {
 
 			return newQuote;
 		},
+
+		createVehicle: async (root, args, context) => {
+			console.log("received create vehicle request");
+
+			const newVehicle = await context.prisma.vehicle.create({
+				data: {
+					customerID: args.customerID,
+					vin: args.vin,
+					vehicleType: args.vehicleType,
+					year: args.year,
+					make: args.make,
+					model: args.model,
+				},
+			});
+
+			try {
+				pubsub.publish(newVehiclesSub, {
+					newVehicle: newVehicle,
+				});
+			} catch (e) {
+				console.error(e);
+			}
+
+			return newVehicle;
+		},
 	},
 	Subscription: {
 		newAppointment: {
@@ -293,6 +317,15 @@ exports.resolvers = {
 				() => pubsub.asyncIterator(newQuotesSub),
 				(payload, variables) => {
 					return payload.newQuote.customerID === variables.customerID;
+				}
+			),
+		},
+
+		newVehicle: {
+			subscribe: withFilter(
+				() => pubsub.asyncIterator(newVehiclesSub),
+				(payload, variables) => {
+					return payload.newVehicle.customerID === variables.customerID;
 				}
 			),
 		},
