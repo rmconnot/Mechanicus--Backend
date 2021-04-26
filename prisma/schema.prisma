@@ -86,7 +86,6 @@ model Appointment {
   status String //status: [ pending, approved, canceled, completed]
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
-  status String // status includes [pending, approved, canceled, completed]
   scheduleDate String //DateTime
   quote Quote @relation(fields: [quoteID], references: [id])
   quoteID Int
