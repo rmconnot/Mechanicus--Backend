@@ -24,6 +24,15 @@ const seedCustomers = [
 					imgUrl:
 						"https://file.kelleybluebookimages.com/kbb/base/evox/CP/10858/2017-Ford-Focus-front_10858_032_2400x1800_YZ.png",
 				},
+				{
+					vin: "43829651765761567",
+					vehicleType: "SUV",
+					year: 2019,
+					make: "Chevrolet",
+					model: "Trailblazer",
+					imgUrl:
+						"https://www.gannett-cdn.com/presto/2020/07/10/PDTF/76f14475-53f5-4abe-ae0f-a4f4911c8be3-IMG_2481.JPG",
+				},
 			],
 		},
 	},
@@ -81,32 +90,35 @@ const seedCustomers = [
 
 const seedServices = [
 	{
-		price: 100.0,
 		type: "Vehicle Inspection",
-		// quotes: {
-		// 	connect: [{ id: 1 }, { id: 2 }],
-		// },
+		laborTime: 2,
+		price: 100.0,
+		
 	},
 	{
-		price: 110.0,
 		type: "Oil change",
-		// quotes: {
-		// 	connect: [{ id: 1 }],
-		// },
+		laborTime: 0.5,
+		price: 110.0,
 	},
 	{
-		price: 120.0,
 		type: "Brake repair",
-		// quotes: {
-		// 	connect: [{ id: 1 }],
-		// },
+		laborTime: 2,
+		price: 120.0,
 	},
 	{
-		price: 130.0,
 		type: "Battery replacement",
-		// quotes: {
-		// 	connect: [{ id: 2 }],
-		// },
+		laborTime: 2,
+		price: 130.0,
+	},
+	{
+		type: "Brake pad replacement",
+		laborTime: 1.5,
+		price: 110.0,
+	},
+	{
+		type: "Brake pad and rotor replacement",
+		laborTime: 2.5,
+		price: 110.0,
 	},
 ];
 
@@ -125,7 +137,7 @@ const seedMechanics = [
 
 const seedQuotes = [
 	{
-		createdAt: new Date(),
+		createdAt: String(new Date()),
 		status: "confirm",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
@@ -133,7 +145,7 @@ const seedQuotes = [
 		costEstimate: 210.0
 	},
 	{
-		createdAt: new Date(),
+		createdAt: String(new Date()),
 		status: "confirm",
 		vehicle: { connect: { id: 2 } },
 		customer: { connect: { id: 2 } },
@@ -141,18 +153,12 @@ const seedQuotes = [
 		costEstimate: 210.0
 	},
 	{
-		createdAt: new Date(),
+		createdAt: String(new Date()),
 		status: "confirmed",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
 		services: { connect: [{ id: 1 }] },
 		costEstimate: 100.0
-	},
-	{
-		createdAt: new Date(),
-		status: "confirmed",
-		vehicleID: 1,
-		customerID: 1,
 	},
 ];
 

@@ -66,7 +66,8 @@ model Quote {
   vehicleID Int
   status String? //status includes [confirmed, expired]
   services Service[]
-  createdAt DateTime @default(now())
+  createdAt String
+  // createdAt DateTime @default(now())
   costEstimate Float?
   description String?
   appointment Appointment?
@@ -107,6 +108,7 @@ model Service {
   id Int @id @default(autoincrement())
   price Float
   type String
+  laborTime Float
   quotes Quote[]
 }
 
