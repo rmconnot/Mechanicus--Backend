@@ -28,7 +28,6 @@ type Quote {
     services: [Service]
 }
 
-
 type Transaction {
     id: Int 
     quoteID: Int
@@ -116,7 +115,7 @@ input MechanicInput {
 }
 
 input QuoteInput {
-    scheduleDate: String
+    createdAt: String
     status: String
     services: [ServiceInput]
     mechanicID: Int
@@ -124,9 +123,6 @@ input QuoteInput {
     customerID: Int
 }
 
-input QuoteServiceInput {
-    id: Int!
-}
 
 type Appointment {
     id: Int

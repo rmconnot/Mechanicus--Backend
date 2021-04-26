@@ -247,6 +247,7 @@ exports.resolvers = {
 
 			const newQuote = await context.prisma.quote.create({
 				data: {
+					createdAt: String(new Date()),
 					costEstimate: args.costEstimate,
 					customer: { connect: { id: args.customerID } },
 					status: args.status,
