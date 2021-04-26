@@ -64,7 +64,7 @@ model Quote {
   customerID Int
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   vehicleID Int
-  status String? //status includes [confirmed, expired]
+  status String? //status: [expired, active]
   services Service[]
   createdAt String
   // createdAt DateTime @default(now())
@@ -91,6 +91,7 @@ model Transaction {
 
 model Appointment {
   id Int @id @default(autoincrement())
+  status String //status: [ pending, approved, canceled, completed]
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
   status String // status includes [pending, approved, canceled, completed]
