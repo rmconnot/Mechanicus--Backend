@@ -107,7 +107,11 @@ exports.resolvers = {
 				return serviceRecordsList;
 			}
 
-			return context.prisma.service.findMany();
+			return context.prisma.service.findMany({
+				include: {
+					parts: true
+				}
+			});
 		},
 
 		quotes: (root, args, context, info) => {
@@ -247,7 +251,6 @@ exports.resolvers = {
 		createQuote: async (root, args, context) => {
 			const newQuote = await context.prisma.quote.create({
 				data: {
-					createdAt: String(new Date()),
 					costEstimate: args.costEstimate,
 					customer: { connect: { id: args.customerID } },
 					status: args.status,

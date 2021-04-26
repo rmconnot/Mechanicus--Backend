@@ -66,20 +66,12 @@ model Quote {
   vehicleID Int
   status String? //status includes [confirmed, expired]
   services Service[]
-  createdAt String
-  // createdAt DateTime @default(now())
+  jobs Job[]
+  createdAt DateTime @default(now())
   costEstimate Float?
   description String?
   appointment Appointment?
 }
-
-// model QuoteServices {
-//   id Int @id @default(autoincrement())
-//   quote Quote? @relation(fields: [quoteID], references: [id])
-//   quoteID Int?
-//   service Service? @relation(fields: [serviceID], references: [id])
-//   serviceID Int?
-// }
 
 model Transaction {
   id Int @id @default(autoincrement())
@@ -100,18 +92,37 @@ model Appointment {
   mechanic Mechanic? @relation(fields: [mechanicID], references: [id])
   mechanicID Int?
   address String
-  // vehicle Vehicle @relation(fields: [vehicleID], references: [id])
-  // vehicleID Int
 }
 
+//include basic labor fee
 model Service {
   id Int @id @default(autoincrement())
-  price Float
-  type String
-  laborTime Float
+  price Float? //some services' labor fee determined by labor time
+  type String //the display name of service
+  laborTime Float? //unit: hour, some services have a flat rate
+  parts Part[] //part options
   quotes Quote[]
+  jobs Job[]
 }
 
+model Part {
+  id Int @id @default(autoincrement())
+  price Float //average part price
+  type String //the display name of part
+  services Service[]
+  jobs Job[]
+}
+
+//the work that is actually done, including service name and parts used
+model Job {
+  id Int @id @default(autoincrement())
+  service Service @relation(fields: [serviceID], references: [id])
+  serviceID Int
+  parts Part[]
+  laborPrice Float //could be edited by Client
+  partPrice Float //total part price, could be edited by Client
+  quotes Quote[]
+}
 
 
 

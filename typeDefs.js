@@ -16,6 +16,7 @@ type Subscription {
     newQuote(customerID:Int!): Quote
     newVehicle(customerID: Int!): Vehicle
 }
+
 type Quote {
     id: Int 
     transaction: Transaction
@@ -53,7 +54,6 @@ type Customer {
     appointments: [Appointment]
 }
 
-
 input CustomerInput {
     firstName: String
     lastName: String
@@ -88,17 +88,35 @@ type Vehicle {
     model: String
     imgUrl: String
 }
+
+type Part {
+    id: Int
+    price: Float
+    type: String
+    services: [Service]
+}
+
+input PartInput {
+    price: Float
+    type: String
+    services: [ServiceInput]
+}
+
 type Service {
     id: Int
     price: Float
     type: String
+    laborTime: Float
     quotes: [Quote]
+    parts: [Part]
 }
+
 input ServiceInput {
-    customerID: Int
     price: Float
     type: String
+    laborTime: Float
     quotes: [QuoteInput]
+    parts: [PartInput]
 }
 
 type Mechanic {

@@ -88,37 +88,67 @@ const seedCustomers = [
 	},
 ];
 
+const seedParts = [
+	//1
+	{
+		type: "Synthetic oil",
+		price: 30.0,
+	},
+	//2
+	{
+		type: "Conventional oil",
+		price: 22.0,
+	},
+	//3
+	{
+		type: "Oil filter",
+		price: 8.0,
+	},
+	//4
+	{
+		type: "Brake pad front",
+		price: 39.0,
+	},
+	//5
+	{
+		type: "Brake pad rear",
+		price: 39.0,
+	},
+	//6
+	{
+		type: "Battery",
+		price: 156.0,
+	},
+];
+
 const seedServices = [
-	{
-		type: "Vehicle Inspection",
-		laborTime: 2,
-		price: 100.0,
-		
-	},
-	{
-		type: "Oil change",
-		laborTime: 0.5,
-		price: 110.0,
-	},
-	{
-		type: "Brake repair",
-		laborTime: 2,
-		price: 120.0,
-	},
-	{
-		type: "Battery replacement",
-		laborTime: 2,
-		price: 130.0,
-	},
 	{
 		type: "Brake pad replacement",
 		laborTime: 1.5,
-		price: 110.0,
+		parts: { connect: [{ id: 4 }, { id: 5 }] },
 	},
 	{
 		type: "Brake pad and rotor replacement",
 		laborTime: 2.5,
-		price: 110.0,
+		parts: { connect: [{ id: 4 }, { id: 5 }] },
+	},
+	{
+		type: "Oil change",
+		laborTime: 0.5,
+		parts: { connect: [{ id: 1 }, { id: 2 }, { id: 3 }] },
+	},
+	{
+		type: "Inspection",
+		price: 50.0,
+	},
+	{
+		type: "Battery jump service",
+		price: 50.0,
+	},
+	{
+		type: "Battery replacement",
+		laborTime: 0.5,
+		parts: { connect: { id: 6 } },
 	},
 ];
 
@@ -137,7 +167,7 @@ const seedMechanics = [
 
 const seedQuotes = [
 	{
-		createdAt: String(new Date()),
+		createdAt: new Date(),
 		status: "confirm",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
@@ -145,7 +175,7 @@ const seedQuotes = [
 		costEstimate: 210.0
 	},
 	{
-		createdAt: String(new Date()),
+		createdAt: new Date(),
 		status: "confirm",
 		vehicle: { connect: { id: 2 } },
 		customer: { connect: { id: 2 } },
@@ -153,7 +183,7 @@ const seedQuotes = [
 		costEstimate: 210.0
 	},
 	{
-		createdAt: String(new Date()),
+		createdAt: new Date(),
 		status: "confirmed",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
@@ -204,6 +234,12 @@ async function main() {
 		console.log(
 			`Created new customer: ${newRecord.firstName} (ID: ${newRecord.id})`
 		);
+	}
+
+	// Create seed parts
+	for (let item of seedParts) {
+		const newEntry = await prisma.part.create({ data: item });
+		console.log(`Created new part: ${newEntry.type} (ID: ${newEntry.id})`);
 	}
 
 	// Create seed services
