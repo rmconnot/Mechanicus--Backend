@@ -156,7 +156,7 @@ const seedAppointments = [
 		quoteID: 1,
 		mechanicID: 1,
 		status: "approved",
-		scheduleDate: '04/05/2021',
+		scheduleDate: '04/05/2021 2:00 PM',
 		address: "123 Sesame Street",
 	},
 	{
@@ -164,7 +164,7 @@ const seedAppointments = [
 		quoteID: 2,
 		mechanicID: 2,
 		status: "approved",
-		scheduleDate: '04/06/2021',
+		scheduleDate: '04/06/2021 10:00 AM',
 		address: "123 Sesame Street",
 	},
 	{
@@ -172,7 +172,7 @@ const seedAppointments = [
 		quoteID: 3,
 		mechanicID: 1,
 		status: "completed",
-		scheduleDate: '04/02/2021',
+		scheduleDate: '04/02/2021 3:00 PM',
 		address: "123 Sesame Street",
 	},
 ]
