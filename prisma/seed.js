@@ -167,7 +167,7 @@ const seedMechanics = [
 
 const seedQuotes = [
 	{
-		createdAt: new Date(),
+		createdAt: String(new Date()),
 		status: "confirm",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
@@ -175,7 +175,7 @@ const seedQuotes = [
 		costEstimate: 210.0
 	},
 	{
-		createdAt: new Date(),
+		createdAt: String(new Date()),
 		status: "confirm",
 		vehicle: { connect: { id: 2 } },
 		customer: { connect: { id: 2 } },
@@ -183,7 +183,7 @@ const seedQuotes = [
 		costEstimate: 210.0
 	},
 	{
-		createdAt: new Date(),
+		createdAt: String(new Date()),
 		status: "confirmed",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
