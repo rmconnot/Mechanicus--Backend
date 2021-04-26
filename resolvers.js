@@ -2,8 +2,14 @@ const newAppointmentsSub = "NEW_APPOINTMENTS";
 const newQuotesSub = "NEW_QUOTES";
 const newVehiclesSub = "NEW_VEHICLES";
 
-const { PubSub } = require("apollo-server");
-const pubsub = new PubSub();
+const { PostgresPubSub } = require("graphql-postgres-subscriptions");
+const { Client } = require("pg");
+
+const client = new Client();
+client.connect();
+const pubsub = new PostgresPubSub({ client });
+
+pubsub.subscribe("error", console.error);
 
 const { withFilter } = require("apollo-server");
 
