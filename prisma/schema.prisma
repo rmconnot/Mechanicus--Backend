@@ -59,7 +59,6 @@ model Vehicle {
 
 model Quote {
   id Int @id @default(autoincrement())
-  transaction Transaction?
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
@@ -82,10 +81,10 @@ model Quote {
 
 model Transaction {
   id Int @id @default(autoincrement())
-  quote Quote @relation(fields: [quoteID], references: [id])
-  quoteID Int
+  appointment Appointment @relation(fields: [appointmentID], references: [id])
+  appointmentID Int
   cost Float
-  dateTime DateTime
+  createdAt DateTime @default(now())
 }
 
 model Appointment {
@@ -99,8 +98,8 @@ model Appointment {
   mechanic Mechanic? @relation(fields: [mechanicID], references: [id])
   mechanicID Int?
   address String
-  // vehicle Vehicle @relation(fields: [vehicleID], references: [id])
-  // vehicleID Int
+  finalCost Float?
+  transaction Transaction?
 }
 
 model Service {

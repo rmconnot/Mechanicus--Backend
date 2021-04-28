@@ -1,6 +1,9 @@
 const { resolvers } = require("./resolvers.js");
 const { typeDefs } = require("./typeDefs.js");
 
+const { SECRET_KEY } = require("./Secrets.js");
+const stripe = require("stripe")(SECRET_KEY);
+
 const express = require("express");
 const http = require("http");
 
@@ -39,6 +42,21 @@ const { ApolloServer } = require("apollo-server-express");
 async function startApolloServer() {
 	const PORT = process.env.PORT || 4000;
 	const app = express();
+
+	app.use(express.urlencoded({ extended: true }));
+	app.use(express.json());
+
+	app.post("/api/doPayment/", (req, res) => {
+		return stripe.charges
+			.create({
+				amount: req.body.amount, // Unit: cents
+				currency: "usd",
+				source: req.body.tokenId,
+				description: req.body.description,
+			})
+			.then((result) => res.status(200).json(result));
+	});
+
 	const server = new ApolloServer({
 		typeDefs,
 		resolvers,

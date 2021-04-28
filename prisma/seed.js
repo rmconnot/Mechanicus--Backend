@@ -130,7 +130,7 @@ const seedQuotes = [
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
 		services: { connect: [{ id: 1 }, { id: 2 }] },
-		costEstimate: 210.0
+		costEstimate: 210.0,
 	},
 	{
 		createdAt: new Date(),
@@ -138,7 +138,7 @@ const seedQuotes = [
 		vehicle: { connect: { id: 2 } },
 		customer: { connect: { id: 2 } },
 		services: { connect: [{ id: 1 }, { id: 2 }] },
-		costEstimate: 210.0
+		costEstimate: 210.0,
 	},
 	{
 		createdAt: new Date(),
@@ -146,7 +146,7 @@ const seedQuotes = [
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
 		services: { connect: [{ id: 1 }] },
-		costEstimate: 100.0
+		costEstimate: 100.0,
 	},
 ];
 
@@ -156,7 +156,7 @@ const seedAppointments = [
 		quoteID: 1,
 		mechanicID: 1,
 		status: "approved",
-		scheduleDate: '04/05/2021',
+		scheduleDate: "04/05/2021",
 		address: "123 Sesame Street",
 	},
 	{
@@ -164,7 +164,7 @@ const seedAppointments = [
 		quoteID: 2,
 		mechanicID: 2,
 		status: "approved",
-		scheduleDate: '04/06/2021',
+		scheduleDate: "04/06/2021",
 		address: "123 Sesame Street",
 	},
 	{
@@ -172,10 +172,11 @@ const seedAppointments = [
 		quoteID: 3,
 		mechanicID: 1,
 		status: "completed",
-		scheduleDate: '04/02/2021',
+		scheduleDate: "04/02/2021",
 		address: "123 Sesame Street",
+		finalCost: 120.75,
 	},
-]
+];
 
 const seedTransactions = [{}];
 
