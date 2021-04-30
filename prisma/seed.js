@@ -120,21 +120,24 @@ const seedParts = [
 		price: 156.0,
 	},
 ];
-
+const labor_rate = 95;
 const seedServices = [
 	{
 		type: "Brake pad replacement",
 		laborTime: 1.5,
+		price: 1.5*labor_rate,
 		parts: { connect: [{ id: 4 }, { id: 5 }] },
 	},
 	{
 		type: "Brake pad and rotor replacement",
 		laborTime: 2.5,
+		price: 2.5*labor_rate,
 		parts: { connect: [{ id: 4 }, { id: 5 }] },
 	},
 	{
 		type: "Oil change",
 		laborTime: 0.5,
+		price: 0.5*labor_rate,
 		parts: { connect: [{ id: 1 }, { id: 2 }, { id: 3 }] },
 	},
 	{
@@ -148,6 +151,7 @@ const seedServices = [
 	{
 		type: "Battery replacement",
 		laborTime: 0.5,
+		price: 0.5*labor_rate,
 		parts: { connect: { id: 6 } },
 	},
 ];
@@ -165,36 +169,76 @@ const seedMechanics = [
 	},
 ];
 
+const seedDate = new Date();
 const seedQuotes = [
 	{
-		createdAt: String(new Date()),
+		createdAt: seedDate,
+		status: "confirmed",
+		vehicle: { connect: { id: 1 } },
+		customer: { connect: { id: 1 } },
+		billItems: {
+			create: [
+				{
+					serviceID: 1,
+					cost: 1.5*95,
+				},{
+					serviceID: 3,
+					cost: 0.5*95,
+				},{
+					partID: 1,
+					cost: 30.0,
+				},{
+					partID: 3,
+					cost: 10.0,
+				},{
+					partID: 5,
+					cost: 42.0,
+				},
+			],
+		},
+		costEstimate: 288.32
+	},
+	{
+		createdAt: seedDate,
 		status: "confirm",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
-		services: { connect: [{ id: 1 }, { id: 2 }] },
-		costEstimate: 210.0
+		billItems: {
+			create: [
+				{
+					serviceID: 4,
+					cost: 50.0,
+				},
+			],
+		},
+		costEstimate: 53.0
 	},
 	{
-		createdAt: String(new Date()),
+		createdAt: seedDate,
 		status: "confirm",
 		vehicle: { connect: { id: 2 } },
 		customer: { connect: { id: 2 } },
-		services: { connect: [{ id: 1 }, { id: 2 }] },
-		costEstimate: 210.0
-	},
-	{
-		createdAt: String(new Date()),
-		status: "confirmed",
-		vehicle: { connect: { id: 1 } },
-		customer: { connect: { id: 1 } },
-		services: { connect: [{ id: 1 }] },
-		costEstimate: 100.0
-	},
-	{
-		createdAt: new Date(),
-		status: "confirmed",
-		vehicleID: 1,
-		customerID: 1,
+		billItems: {
+			create: [
+				{
+					serviceID: 1,
+					cost: 1.5*95,
+				},{
+					serviceID: 3,
+					cost: 0.5*95,
+				},{
+					partID: 1,
+					cost: 30.0,
+				},{
+					partID: 3,
+					cost: 10.0,
+				},{
+					partID: 5,
+					cost: 42.0,
+				},
+			],
+		},
+		costEstimate: 288.32
 	},
 ];
 

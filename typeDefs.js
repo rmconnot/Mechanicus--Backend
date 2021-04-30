@@ -2,6 +2,7 @@ exports.typeDefs = `
 type Query {
     customers: [Customer!]!
     services(servicesList:[Int]): [Service!]!
+    parts(partsList:[Int]): [Part!]!
     vehicle(id:Int!): Vehicle!
     vehicles(customerID:Int!): [Vehicle!]!
     quotes(customerID:Int!): [Quote!]! 
@@ -27,7 +28,7 @@ type Quote {
     status: String
     costEstimate: Float
     description: String
-    services: [Service]
+    billItems: [BillItem]
 }
 
 type Transaction {
@@ -37,6 +38,7 @@ type Transaction {
     cost: Float
     dateTime: String
 }
+
 type Customer {
     id: Int
     firstName: String
@@ -66,7 +68,6 @@ input CustomerInput {
     state: String
     zipcode: Int
 }
-
 
 input VehicleInput {
     customerID: Int  
@@ -107,7 +108,6 @@ type Service {
     price: Float
     type: String
     laborTime: Float
-    quotes: [Quote]
     parts: [Part]
 }
 
@@ -117,6 +117,24 @@ input ServiceInput {
     laborTime: Float
     quotes: [QuoteInput]
     parts: [PartInput]
+}
+
+type BillItem {
+    id: Int
+    service: Service
+    serviceID: Int
+    part: Part
+    partID: Int
+    cost: Float
+    quote: Quote
+    quoteID: Int
+}
+
+input BillItemInput {
+    serviceID: Int
+    partID: Int
+    cost: Float
+    quoteID: Int
 }
 
 type Mechanic {
@@ -136,7 +154,7 @@ input MechanicInput {
 input QuoteInput {
     createdAt: String
     status: String
-    services: [ServiceInput]
+    billItems: [BillItemInput]
     mechanicID: Int
     vehicleID: Int
     customerID: Int
@@ -194,7 +212,7 @@ type Mutation {
         customerID: Int!
 		status: String!
         vehicleID: Int!
-        services: [Int]!
+        billItems: [BillItemInput]
         ): Quote,
     createVehicle(
         customerID: Int!
