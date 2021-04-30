@@ -64,7 +64,12 @@ exports.resolvers = {
 					quote: {
 						include: {
 							vehicle: true,
-							services: true,
+							billItems: {
+								include: {
+									service: true,
+									part: true,
+								},
+							},
 						},
 					},
 					mechanic: true,
@@ -113,7 +118,25 @@ exports.resolvers = {
 				return serviceRecordsList;
 			}
 
-			return context.prisma.service.findMany();
+			return context.prisma.service.findMany({
+				include: {
+					parts: true
+				}
+			});
+		},
+
+		parts: async (root, args, context, info) => {
+			let partRecordsList = [];
+
+			for (let item of args.partsList) {
+				let record = await context.prisma.part.findUnique({
+					where: {
+						id: item,
+					},
+				});
+				partRecordsList.push(record);
+			}
+			return partRecordsList;
 		},
 
 		quotes: (root, args, context, info) => {
@@ -124,7 +147,12 @@ exports.resolvers = {
 
 				include: {
 					vehicle: true,
-					services: true,
+					billItems: {
+						include: {
+							service: true,
+							part: true,
+						},
+					},
 				},
 			});
 		},
@@ -138,7 +166,12 @@ exports.resolvers = {
 					quote: {
 						include: {
 							vehicle: true,
-							services: true,
+							billItems: {
+								include: {
+									service: true,
+									part: true,
+								},
+							},
 						},
 					},
 					mechanic: true,
@@ -240,11 +273,18 @@ exports.resolvers = {
 		createQuote: async (root, args, context) => {
 			const newQuote = await context.prisma.quote.create({
 				data: {
+					// createdAt: String(new Date()),
 					costEstimate: args.costEstimate,
 					customer: { connect: { id: args.customerID } },
 					status: args.status,
 					vehicle: { connect: { id: args.vehicleID } },
-					services: { connect: args.services.map((s) => ({ id: s })) },
+					billItems: { create: args.billItems.map((s)=>({
+							serviceID: s.serviceID,
+							partID: s.partID, 
+							cost: s.cost,
+						}))
+					},
+					// services: { connect: args.services.map((s) => ({ id: s })) },
 				},
 			});
 
@@ -257,7 +297,12 @@ exports.resolvers = {
 					},
 					include: {
 						vehicle: true,
-						services: true,
+						billItems: {
+							include: {
+								service: true,
+								part: true,
+							}
+						},
 					},
 				});
 				pubsub.publish(newQuotesSub, {
