@@ -2,8 +2,14 @@ const newAppointmentsSub = "NEW_APPOINTMENTS";
 const newQuotesSub = "NEW_QUOTES";
 const newVehiclesSub = "NEW_VEHICLES";
 
-const { PubSub } = require("apollo-server");
-const pubsub = new PubSub();
+const { PostgresPubSub } = require("graphql-postgres-subscriptions");
+const { Client } = require("pg");
+
+const client = new Client();
+client.connect();
+const pubsub = new PostgresPubSub({ client });
+
+pubsub.subscribe("error", console.error);
 
 const { withFilter } = require("apollo-server");
 
@@ -225,19 +231,6 @@ exports.resolvers = {
 					city: args.city,
 					state: args.state,
 					zipcode: args.zipcode,
-
-					vehicles: {
-						create: [
-							{
-								vin: args.vehicles[0].vin,
-								vehicleType: args.vehicles[0].vehicleType,
-								year: args.vehicles[0].year,
-								make: args.vehicles[0].make,
-								model: args.vehicles[0].model,
-								imgUrl: args.vehicles[0].imgUrl,
-							},
-						],
-					},
 				},
 			});
 		},
@@ -346,7 +339,48 @@ exports.resolvers = {
 
 			return newVehicle;
 		},
+
+		updateAppointment: async (root, args, context) => {
+			const updatedAppointment = await context.prisma.appointment.update({
+				where: {
+					id: args.id,
+				},
+				data: {
+					status: args.status,
+				},
+			});
+
+			try {
+				const appointmentQuote = await context.prisma.quote.findUnique({
+					where: {
+						id: updatedAppointment.quoteID,
+					},
+					include: {
+						vehicle: true,
+						services: true,
+					},
+				});
+				updatedAppointment.quote = appointmentQuote;
+				pubsub.publish(newAppointmentsSub, {
+					newAppointment: updatedAppointment,
+				});
+			} catch (e) {
+				console.error(e);
+			}
+
+			return updatedAppointment;
+		},
+
+		createTransaction: async (root, args, context) => {
+			return context.prisma.transaction.create({
+				data: {
+					appointmentID: args.appointmentID,
+					cost: args.cost,
+				},
+			});
+		},
 	},
+
 	Subscription: {
 		newAppointment: {
 			subscribe: withFilter(

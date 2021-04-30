@@ -1,37 +1,95 @@
 const { resolvers } = require("./resolvers.js");
 const { typeDefs } = require("./typeDefs.js");
 
+const { SECRET_KEY } = require("./Secrets.js");
+const stripe = require("stripe")(SECRET_KEY);
+
+const express = require("express");
+const http = require("http");
+
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer } = require("apollo-server-express");
 
-const PORT = process.env.PORT || 4000;
+// const PORT = process.env.PORT || 4000;
 
-const server = new ApolloServer({
-	typeDefs,
-	resolvers,
-	subscriptions: {
-		path: "/subscriptions",
-		onConnect: (connectionParams, webSocket, context) => {
-			console.log("Client connected");
+// const server = new ApolloServer({
+// 	typeDefs,
+// 	resolvers,
+// 	subscriptions: {
+// 		path: "/subscriptions",
+// 		onConnect: (connectionParams, webSocket, context) => {
+// 			console.log("Client connected");
+// 		},
+// 		onDisconnect: (webSocket, context) => {
+// 			console.log("Client disconnected");
+// 		},
+// 	},
+// 	context: {
+// 		prisma,
+// 	},
+// });
+
+// server.listen().then(({ url }) => {
+// 	console.log(
+// 		`Subscription endpoint ready at ws://localhost:${PORT}${
+// 			server.subscriptionsPath
+// 		}`
+// 	);
+// });
+
+async function startApolloServer() {
+	const PORT = process.env.PORT || 4000;
+	const app = express();
+
+	app.use(express.urlencoded({ extended: true }));
+	app.use(express.json());
+
+	app.post("/api/doPayment/", (req, res) => {
+		return stripe.charges
+			.create({
+				amount: req.body.amount, // Unit: cents
+				currency: "usd",
+				source: req.body.tokenId,
+				description: req.body.description,
+			})
+			.then((result) => res.status(200).json(result));
+	});
+
+	const server = new ApolloServer({
+		typeDefs,
+		resolvers,
+		subscriptions: {
+			path: "/subscriptions",
+			onConnect: (connectionParams, webSocket, context) => {
+				console.log("Client connected");
+			},
+			onDisconnect: (webSocket, context) => {
+				console.log("Client disconnected");
+			},
 		},
-		onDisconnect: (webSocket, context) => {
-			console.log("Client disconnected");
-		},
-	},
-	context: {
-		prisma,
-	},
-});
+		context: { prisma },
+	});
+	await server.start();
+	server.applyMiddleware({ app });
 
-server.listen().then(({ url }) => {
+	const httpServer = http.createServer(app);
+	server.installSubscriptionHandlers(httpServer);
+	// Make sure to call listen on httpServer, NOT on app.
+	await new Promise((resolve) => httpServer.listen(PORT, resolve));
 	console.log(
-		`Subscription endpoint ready at ws://localhost:${PORT}${
+		`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+	);
+	console.log(
+		`🚀 Subscriptions ready at ws://localhost:${PORT}${
 			server.subscriptionsPath
 		}`
 	);
-});
+	return { server, app, httpServer };
+}
+
+startApolloServer();
 
 /////////////////// ********** ------------  ************* /////////////////////
 

@@ -33,10 +33,10 @@ type Quote {
 
 type Transaction {
     id: Int 
-    quoteID: Int
-    service: String
+    appointment: Appointment
+    appointmentID: Int
     cost: Float
-    dateTime: String
+    createdAt: String
 }
 
 type Customer {
@@ -172,6 +172,7 @@ type Appointment {
     mechanic: Mechanic
     mechanicID: Int
     address: String
+    finalCost: String
 }
 type Mutation {
     createCustomer(
@@ -198,7 +199,6 @@ type Mutation {
         city: String
         state: String
         zipcode: Int
-        vehicles: [VehicleInput]
     ): Customer,
     createAppointment(
         address: String!
@@ -221,5 +221,13 @@ type Mutation {
         year: Int!
         make: String!
         model: String!
-    ): Vehicle
+    ): Vehicle,
+    updateAppointment(
+        id: Int!
+        status: String
+    ): Appointment,
+    createTransaction(
+        appointmentID: Int
+        cost: Float
+    ): Transaction
 }`;
