@@ -126,7 +126,7 @@ const seedMechanics = [
 const seedQuotes = [
 	{
 		createdAt: new Date(),
-		status: "confirm",
+		status: "CONFIRMED",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
 		services: { connect: [{ id: 1 }, { id: 2 }] },
@@ -134,7 +134,7 @@ const seedQuotes = [
 	},
 	{
 		createdAt: new Date(),
-		status: "confirm",
+		status: "CONFIRMED",
 		vehicle: { connect: { id: 2 } },
 		customer: { connect: { id: 2 } },
 		services: { connect: [{ id: 1 }, { id: 2 }] },
@@ -142,7 +142,7 @@ const seedQuotes = [
 	},
 	{
 		createdAt: new Date(),
-		status: "confirmed",
+		status: "CONFIRMED",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
 		services: { connect: [{ id: 1 }] },
@@ -155,7 +155,7 @@ const seedAppointments = [
 		customerID: 1,
 		quoteID: 1,
 		mechanicID: 1,
-		status: "approved",
+		status: "APPROVED",
 		scheduleDate: "04/05/2021",
 		address: "123 Sesame Street",
 	},
@@ -163,7 +163,7 @@ const seedAppointments = [
 		customerID: 2,
 		quoteID: 2,
 		mechanicID: 2,
-		status: "approved",
+		status: "APPROVED",
 		scheduleDate: "04/06/2021",
 		address: "123 Sesame Street",
 	},
@@ -171,7 +171,7 @@ const seedAppointments = [
 		customerID: 1,
 		quoteID: 3,
 		mechanicID: 1,
-		status: "completed",
+		status: "COMPLETED",
 		scheduleDate: "04/02/2021",
 		address: "123 Sesame Street",
 		finalCost: 120.75,

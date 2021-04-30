@@ -20,8 +20,6 @@ exports.resolvers = {
 		},
 
 		customer: async (root, args, context, info) => {
-			console.log(args);
-
 			if (args.id) {
 				return context.prisma.customer.findUnique({
 					where: {
@@ -148,7 +146,6 @@ exports.resolvers = {
 	},
 	Mutation: {
 		createCustomer: async (root, args, context) => {
-			console.log("creating customer");
 			const existingCustomer = await context.prisma.customer.findUnique({
 				where: {
 					email: args.email,
@@ -203,7 +200,6 @@ exports.resolvers = {
 		},
 
 		createAppointment: async (root, args, context) => {
-			console.log("received createAppointment request");
 			const newAppointment = await context.prisma.appointment.create({
 				data: {
 					customerID: args.customerID,
@@ -213,8 +209,6 @@ exports.resolvers = {
 					status: args.status,
 				},
 			});
-
-			// console.log("New Appointment: ", newAppointment);
 
 			try {
 				const appointmentQuote = await context.prisma.quote.findUnique({
@@ -248,8 +242,6 @@ exports.resolvers = {
 				},
 			});
 
-			// console.log("newQuote: ", newQuote);
-
 			try {
 				const retrievedQuote = await context.prisma.quote.findUnique({
 					where: {
@@ -271,8 +263,6 @@ exports.resolvers = {
 		},
 
 		createVehicle: async (root, args, context) => {
-			console.log("received create vehicle request");
-
 			const newVehicle = await context.prisma.vehicle.create({
 				data: {
 					customerID: args.customerID,

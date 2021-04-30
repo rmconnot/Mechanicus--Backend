@@ -63,7 +63,7 @@ model Quote {
   customerID Int
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   vehicleID Int
-  status String? //status includes [confirmed, expired]
+  status QuoteStatus? //status includes [confirmed, expired]
   services Service[]
   createdAt DateTime @default(now())
   costEstimate Float?
@@ -91,7 +91,7 @@ model Appointment {
   id Int @id @default(autoincrement())
   customer Customer @relation(fields: [customerID], references: [id])
   customerID Int
-  status String // status includes [pending, approved, canceled, completed]
+  status AppointmentStatus
   scheduleDate String //DateTime
   quote Quote @relation(fields: [quoteID], references: [id])
   quoteID Int
@@ -109,6 +109,18 @@ model Service {
   quotes Quote[]
 }
 
+enum AppointmentStatus {
+  PAID
+  PENDING
+  APPROVED
+  CANCELED
+  COMPLETED
+}
+
+enum QuoteStatus {
+  CONFIRMED
+  EXPIRED
+}
 
 
 
