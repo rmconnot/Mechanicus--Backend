@@ -64,49 +64,47 @@ model Quote {
   vehicle Vehicle @relation(fields: [vehicleID], references: [id])
   vehicleID Int
   status QuoteStatus? //status includes [confirmed, expired]
-  services Service[]
+  // services Service[]
+  billItems BillItem[]
   createdAt DateTime @default(now())
   costEstimate Float?
   description String?
   appointment Appointment?
+  transaction Transaction?
 }
-
-// model QuoteServices {
-//   id Int @id @default(autoincrement())
-//   quote Quote? @relation(fields: [quoteID], references: [id])
-//   quoteID Int?
-//   service Service? @relation(fields: [serviceID], references: [id])
-//   serviceID Int?
-// }
 
 model Transaction {
   id Int @id @default(autoincrement())
-  appointment Appointment @relation(fields: [appointmentID], references: [id])
-  appointmentID Int
+  quote Quote @relation(fields: [quoteID], references: [id])
   cost Float
+  quoteID Int
+  // appointment Appointment @relation(fields: [appointmentID], references: [id])
+  // appointmentID Int?
   createdAt DateTime @default(now())
 }
 
 model Appointment {
   id Int @id @default(autoincrement())
+  status String //status: [ pending, approved, canceled, (price) settled, (payment) completed]
   customer Customer @relation(fields: [customerID], references: [id])
-  customerID Int
-  status AppointmentStatus
   scheduleDate String //DateTime
   quote Quote @relation(fields: [quoteID], references: [id])
-  quoteID Int
   mechanic Mechanic? @relation(fields: [mechanicID], references: [id])
-  mechanicID Int?
   address String
-  finalCost Float?
-  transaction Transaction?
+  customerID Int
+  quoteID Int
+  mechanicID Int?
+
 }
 
+//include basic labor fee
 model Service {
   id Int @id @default(autoincrement())
-  price Float
-  type String
-  quotes Quote[]
+  type String //the display name of service
+  price Float? //some services' labor fee determined by labor time
+  laborTime Float? //unit: hour, some services have a flat rate
+  parts Part[] //part options
+  billItems BillItem[]
 }
 
 enum AppointmentStatus {
@@ -121,7 +119,22 @@ enum QuoteStatus {
   CONFIRMED
   EXPIRED
 }
+model Part {
+  id Int @id @default(autoincrement())
+  type String //the display name of part
+  price Float //average part price
+  services Service[]
+  billItems BillItem[]
+}
 
-
-
-
+//Service or part that would be charged
+model BillItem {
+  id Int @id @default(autoincrement())
+  quote Quote @relation(fields: [quoteID], references: [id])
+  service Service? @relation(fields: [serviceID], references: [id])
+  part Part? @relation(fields: [partID], references: [id])
+  cost Float //client can edit
+  serviceID Int?
+  partID Int?
+  quoteID Int
+}

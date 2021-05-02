@@ -24,6 +24,15 @@ const seedCustomers = [
 					imgUrl:
 						"https://file.kelleybluebookimages.com/kbb/base/evox/CP/10858/2017-Ford-Focus-front_10858_032_2400x1800_YZ.png",
 				},
+				{
+					vin: "43829651765761567",
+					vehicleType: "SUV",
+					year: 2019,
+					make: "Chevrolet",
+					model: "Trailblazer",
+					imgUrl:
+						"https://www.gannett-cdn.com/presto/2020/07/10/PDTF/76f14475-53f5-4abe-ae0f-a4f4911c8be3-IMG_2481.JPG",
+				},
 			],
 		},
 	},
@@ -79,34 +88,71 @@ const seedCustomers = [
 	},
 ];
 
+const seedParts = [
+	//1
+	{
+		type: "Synthetic oil",
+		price: 30.0,
+	},
+	//2
+	{
+		type: "Conventional oil",
+		price: 22.0,
+	},
+	//3
+	{
+		type: "Oil filter",
+		price: 8.0,
+	},
+	//4
+	{
+		type: "Brake pad front",
+		price: 39.0,
+	},
+	//5
+	{
+		type: "Brake pad rear",
+		price: 39.0,
+	},
+	//6
+	{
+		type: "Battery",
+		price: 156.0,
+	},
+];
+const labor_rate = 95;
 const seedServices = [
 	{
-		price: 100.0,
-		type: "Vehicle Inspection",
-		// quotes: {
-		// 	connect: [{ id: 1 }, { id: 2 }],
-		// },
+		type: "Brake pad replacement",
+		laborTime: 1.5,
+		price: 1.5 * labor_rate,
+		parts: { connect: [{ id: 4 }, { id: 5 }] },
 	},
 	{
-		price: 110.0,
+		type: "Brake pad and rotor replacement",
+		laborTime: 2.5,
+		price: 2.5 * labor_rate,
+		parts: { connect: [{ id: 4 }, { id: 5 }] },
+	},
+	{
 		type: "Oil change",
-		// quotes: {
-		// 	connect: [{ id: 1 }],
-		// },
+		laborTime: 0.5,
+		price: 0.5 * labor_rate,
+		parts: { connect: [{ id: 1 }, { id: 2 }, { id: 3 }] },
 	},
 	{
-		price: 120.0,
-		type: "Brake repair",
-		// quotes: {
-		// 	connect: [{ id: 1 }],
-		// },
+		type: "Inspection",
+		price: 50.0,
 	},
 	{
-		price: 130.0,
+		type: "Battery jump service",
+		price: 50.0,
+	},
+	{
 		type: "Battery replacement",
-		// quotes: {
-		// 	connect: [{ id: 2 }],
-		// },
+		laborTime: 0.5,
+		price: 0.5 * labor_rate,
+		parts: { connect: { id: 6 } },
 	},
 ];
 
@@ -123,30 +169,85 @@ const seedMechanics = [
 	},
 ];
 
+const seedDate = new Date();
 const seedQuotes = [
 	{
-		createdAt: new Date(),
+		createdAt: seedDate,
 		status: "CONFIRMED",
 		vehicle: { connect: { id: 1 } },
 		customer: { connect: { id: 1 } },
-		services: { connect: [{ id: 1 }, { id: 2 }] },
-		costEstimate: 210.0,
+		billItems: {
+			create: [
+				{
+					serviceID: 1,
+					cost: 1.5 * 95,
+				},
+				{
+					serviceID: 3,
+					cost: 0.5 * 95,
+				},
+				{
+					partID: 1,
+					cost: 30.0,
+				},
+				{
+					partID: 3,
+					cost: 10.0,
+				},
+				{
+					partID: 5,
+					cost: 42.0,
+				},
+			],
+		},
+		costEstimate: 288.32,
 	},
 	{
-		createdAt: new Date(),
+		createdAt: seedDate,
+		status: "CONFIRMED",
+		vehicle: { connect: { id: 1 } },
+		customer: { connect: { id: 1 } },
+		billItems: {
+			create: [
+				{
+					serviceID: 4,
+					cost: 50.0,
+				},
+			],
+		},
+		costEstimate: 53.0,
+	},
+	{
+		createdAt: seedDate,
 		status: "CONFIRMED",
 		vehicle: { connect: { id: 2 } },
 		customer: { connect: { id: 2 } },
-		services: { connect: [{ id: 1 }, { id: 2 }] },
-		costEstimate: 210.0,
-	},
-	{
-		createdAt: new Date(),
-		status: "CONFIRMED",
-		vehicle: { connect: { id: 1 } },
-		customer: { connect: { id: 1 } },
-		services: { connect: [{ id: 1 }] },
-		costEstimate: 100.0,
+
+		billItems: {
+			create: [
+				{
+					serviceID: 1,
+					cost: 1.5 * 95,
+				},
+				{
+					serviceID: 3,
+					cost: 0.5 * 95,
+				},
+				{
+					partID: 1,
+					cost: 30.0,
+				},
+				{
+					partID: 3,
+					cost: 10.0,
+				},
+				{
+					partID: 5,
+					cost: 42.0,
+				},
+			],
+		},
+		costEstimate: 288.32,
 	},
 ];
 
@@ -174,7 +275,7 @@ const seedAppointments = [
 		status: "COMPLETED",
 		scheduleDate: "04/02/2021",
 		address: "123 Sesame Street",
-		finalCost: 120.75,
+		// finalCost: 120.75,
 	},
 ];
 
@@ -187,6 +288,12 @@ async function main() {
 		console.log(
 			`Created new customer: ${newRecord.firstName} (ID: ${newRecord.id})`
 		);
+	}
+
+	// Create seed parts
+	for (let item of seedParts) {
+		const newEntry = await prisma.part.create({ data: item });
+		console.log(`Created new part: ${newEntry.type} (ID: ${newEntry.id})`);
 	}
 
 	// Create seed services
@@ -222,14 +329,6 @@ async function main() {
 			} with quote ${newEntry.quoteID}`
 		);
 	}
-
-	//Create seed QuoteServices
-	// for (let item of seedQuoteServices) {
-	// 	const newEntry = await prisma.quoteService.create({ data: item });
-	// 	console.log(
-	// 		`Created new QuoteService: (ID: ${newEntry.id})`
-	// 	);
-	// }
 }
 
 main()
