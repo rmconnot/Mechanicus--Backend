@@ -1,8 +1,8 @@
 const { resolvers } = require("./resolvers.js");
 const { typeDefs } = require("./typeDefs.js");
 
-const { SECRET_KEY } = require("./Secrets.js");
-const stripe = require("stripe")(SECRET_KEY);
+//const { SECRET_KEY } = require("./Secrets.js");
+//const stripe = require("stripe")(SECRET_KEY);
 
 const express = require("express");
 const http = require("http");
