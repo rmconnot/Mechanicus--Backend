@@ -20,8 +20,7 @@ exports.resolvers = {
 		},
 
 		customer: async (root, args, context, info) => {
-			console.log(args);
-
+			console.log("customer request");
 			if (args.id) {
 				return context.prisma.customer.findUnique({
 					where: {
@@ -64,7 +63,12 @@ exports.resolvers = {
 					quote: {
 						include: {
 							vehicle: true,
-							services: true,
+							billItems: {
+								include: {
+									service: true,
+									part: true,
+								},
+							},
 						},
 					},
 					mechanic: true,
@@ -113,7 +117,25 @@ exports.resolvers = {
 				return serviceRecordsList;
 			}
 
-			return context.prisma.service.findMany();
+			return context.prisma.service.findMany({
+				include: {
+					parts: true,
+				},
+			});
+		},
+
+		parts: async (root, args, context, info) => {
+			let partRecordsList = [];
+
+			for (let item of args.partsList) {
+				let record = await context.prisma.part.findUnique({
+					where: {
+						id: item,
+					},
+				});
+				partRecordsList.push(record);
+			}
+			return partRecordsList;
 		},
 
 		quotes: (root, args, context, info) => {
@@ -124,21 +146,31 @@ exports.resolvers = {
 
 				include: {
 					vehicle: true,
-					services: true,
+					billItems: {
+						include: {
+							service: true,
+							part: true,
+						},
+					},
 				},
 			});
 		},
 		appointment: (root, args, context, info) => {
 			return context.prisma.appointment.findUnique({
 				where: {
-					id: args.appointmentID,
+					id: args.id,
 				},
 
 				include: {
 					quote: {
 						include: {
 							vehicle: true,
-							services: true,
+							billItems: {
+								include: {
+									service: true,
+									part: true,
+								},
+							},
 						},
 					},
 					mechanic: true,
@@ -148,7 +180,6 @@ exports.resolvers = {
 	},
 	Mutation: {
 		createCustomer: async (root, args, context) => {
-			console.log("creating customer");
 			const existingCustomer = await context.prisma.customer.findUnique({
 				where: {
 					email: args.email,
@@ -203,7 +234,6 @@ exports.resolvers = {
 		},
 
 		createAppointment: async (root, args, context) => {
-			console.log("received createAppointment request");
 			const newAppointment = await context.prisma.appointment.create({
 				data: {
 					customerID: args.customerID,
@@ -214,8 +244,6 @@ exports.resolvers = {
 				},
 			});
 
-			// console.log("New Appointment: ", newAppointment);
-
 			try {
 				const appointmentQuote = await context.prisma.quote.findUnique({
 					where: {
@@ -223,7 +251,12 @@ exports.resolvers = {
 					},
 					include: {
 						vehicle: true,
-						services: true,
+						billItems: {
+							include: {
+								service: true,
+								part: true,
+							},
+						},
 					},
 				});
 				newAppointment.quote = appointmentQuote;
@@ -240,15 +273,23 @@ exports.resolvers = {
 		createQuote: async (root, args, context) => {
 			const newQuote = await context.prisma.quote.create({
 				data: {
+					// createdAt: String(new Date()),
 					costEstimate: args.costEstimate,
 					customer: { connect: { id: args.customerID } },
 					status: args.status,
 					vehicle: { connect: { id: args.vehicleID } },
-					services: { connect: args.services.map((s) => ({ id: s })) },
+					billItems: {
+						create: args.billItems.map((s) => ({
+							serviceID: s.serviceID,
+							partID: s.partID,
+							cost: s.cost,
+						})),
+					},
+					// services: { connect: args.services.map((s) => ({ id: s })) },
 				},
 			});
 
-			// console.log("newQuote: ", newQuote);
+			console.log("newQuote: ", newQuote);
 
 			try {
 				const retrievedQuote = await context.prisma.quote.findUnique({
@@ -257,9 +298,16 @@ exports.resolvers = {
 					},
 					include: {
 						vehicle: true,
-						services: true,
+						billItems: {
+							include: {
+								service: true,
+								part: true,
+							},
+						},
 					},
 				});
+
+				console.log("retrievedQuote: ", retrievedQuote);
 				pubsub.publish(newQuotesSub, {
 					newQuote: retrievedQuote,
 				});
@@ -271,8 +319,6 @@ exports.resolvers = {
 		},
 
 		createVehicle: async (root, args, context) => {
-			console.log("received create vehicle request");
-
 			const newVehicle = await context.prisma.vehicle.create({
 				data: {
 					customerID: args.customerID,
@@ -312,7 +358,12 @@ exports.resolvers = {
 					},
 					include: {
 						vehicle: true,
-						services: true,
+						billItems: {
+							include: {
+								service: true,
+								part: true,
+							},
+						},
 					},
 				});
 				updatedAppointment.quote = appointmentQuote;
@@ -329,7 +380,7 @@ exports.resolvers = {
 		createTransaction: async (root, args, context) => {
 			return context.prisma.transaction.create({
 				data: {
-					appointmentID: args.appointmentID,
+					quoteID: args.quoteID,
 					cost: args.cost,
 				},
 			});

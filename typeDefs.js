@@ -2,12 +2,13 @@ exports.typeDefs = `
 type Query {
     customers: [Customer!]!
     services(servicesList:[Int]): [Service!]!
+    parts(partsList:[Int]): [Part!]!
     vehicle(id:Int!): Vehicle!
     vehicles(customerID:Int!): [Vehicle!]!
     quotes(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
     appointments(customerID:Int!): [Appointment!]!
-    appointment(appointmentID:Int!): Appointment!
+    appointment(id:Int!): Appointment!
     customerProfile(id:Int): Customer
 }
 type Subscription {
@@ -16,6 +17,7 @@ type Subscription {
     newQuote(customerID:Int!): Quote
     newVehicle(customerID: Int!): Vehicle
 }
+
 type Quote {
     id: Int 
     transaction: Transaction
@@ -26,9 +28,8 @@ type Quote {
     status: String
     costEstimate: Float
     description: String
-    services: [Service]
+    billItems: [BillItem]
 }
-
 
 type Transaction {
     id: Int 
@@ -55,7 +56,6 @@ type Customer {
     appointments: [Appointment]
 }
 
-
 input CustomerInput {
     firstName: String
     lastName: String
@@ -68,7 +68,6 @@ input CustomerInput {
     state: String
     zipcode: Int
 }
-
 
 input VehicleInput {
     customerID: Int  
@@ -90,17 +89,52 @@ type Vehicle {
     model: String
     imgUrl: String
 }
+
+type Part {
+    id: Int
+    price: Float
+    type: String
+    services: [Service]
+}
+
+input PartInput {
+    price: Float
+    type: String
+    services: [ServiceInput]
+}
+
 type Service {
     id: Int
     price: Float
     type: String
-    quotes: [Quote]
+    laborTime: Float
+    parts: [Part]
 }
+
 input ServiceInput {
-    customerID: Int
     price: Float
     type: String
+    laborTime: Float
     quotes: [QuoteInput]
+    parts: [PartInput]
+}
+
+type BillItem {
+    id: Int
+    service: Service
+    serviceID: Int
+    part: Part
+    partID: Int
+    cost: Float
+    quote: Quote
+    quoteID: Int
+}
+
+input BillItemInput {
+    serviceID: Int
+    partID: Int
+    cost: Float
+    quoteID: Int
 }
 
 type Mechanic {
@@ -118,17 +152,14 @@ input MechanicInput {
 }
 
 input QuoteInput {
-    scheduleDate: String
+    createdAt: String
     status: String
-    services: [ServiceInput]
+    billItems: [BillItemInput]
     mechanicID: Int
     vehicleID: Int
     customerID: Int
 }
 
-input QuoteServiceInput {
-    id: Int!
-}
 
 type Appointment {
     id: Int
@@ -181,7 +212,7 @@ type Mutation {
         customerID: Int!
 		status: String!
         vehicleID: Int!
-        services: [Int]!
+        billItems: [BillItemInput]
         ): Quote,
     createVehicle(
         customerID: Int!
@@ -196,7 +227,7 @@ type Mutation {
         status: String
     ): Appointment,
     createTransaction(
-        appointmentID: Int
-        cost: Float
+        quoteID: Int!
+        cost: Float!
     ): Transaction
 }`;
